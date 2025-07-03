@@ -1,0 +1,77 @@
+databaseChangelog:
+  - property:
+      name: table.name
+      value: construction_project
+      global: false
+
+  - property:
+      name: author
+      value: EK
+      global: false
+
+  - changeSet:
+      id: ${table.name}-create-table
+      author: ${author}
+      changes:
+        - createTable:
+            tableName: ${table.name}
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(300)
+                  remarks: название проекта
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_budget
+                  type: numeric(12,2)
+                  remarks: общий бюджет
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: timestamp without time zone
+                  defaultValue: 'NOW()'
+                  remarks: дата начала проекта
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: timestamp without time zone
+                  defaultValue: 'NOW()'
+                  remarks: дата окончания проекта
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_project_user
+                    references: users(id)
+                    onDelete: CASCADE
+
+  - changeSet:
+      id: ${table.name}-create-indexes
+      author: ${author}
+      changes:
+        - createIndex:
+            tableName: ${table.name}
+            indexName: idx_project_user
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: ${table.name}-create-constraints
+      author: ${author}
+      changes:
+        - addPrimaryKey:
+            constraintName: PK_${table.name}
+            columnNames: id
+            tableName: ${table.name}

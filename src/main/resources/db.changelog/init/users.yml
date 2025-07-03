@@ -1,0 +1,58 @@
+databaseChangelog:
+  - property:
+      name: table.name
+      value: users
+      global: false
+
+  - property:
+      name: author
+      value: EK
+      global: false
+
+  - changeSet:
+      id: ${table.name}-create-table
+      author: ${author}
+      changes:
+        - createTable:
+            tableName: ${table.name}
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: telegram_id
+                  type: bigint
+                  unique: true
+                  remarks: уникальный ID из Telegram
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(300)
+                  remarks: имя пользователя
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(50)
+                  remarks: роль пользователя
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp without time zone
+                  defaultValue: 'NOW()'
+                  remarks: дата создания пользователя
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: ${table.name}-create-constraints
+      author: ${author}
+      changes:
+        - addPrimaryKey:
+            constraintName: PK_${table.name}
+            columnNames: id
+            tableName: ${table.name}

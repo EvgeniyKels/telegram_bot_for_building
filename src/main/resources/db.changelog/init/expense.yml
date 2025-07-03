@@ -1,0 +1,90 @@
+databaseChangelog:
+  - property:
+      name: table.name
+      value: expense
+      global: false
+
+  - property:
+      name: author
+      value: EK
+      global: false
+
+  - changeSet:
+      id: ${table.name}-create-table
+      author: ${author}
+      changes:
+        - createTable:
+            tableName: ${table.name}
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric(12,2)
+                  remarks: сумма
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(1000)
+                  remarks: комментарий
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_expense_construction_project
+                    references: construction_project(id)
+                    onDelete: CASCADE
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_expense_expense_category
+                    references: expense_category(id)
+                    onDelete: CASCADE
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_expense_user
+                    references: users(id)
+                    onDelete: CASCADE
+
+
+  - changeSet:
+      id: ${table.name}-create-indexes
+      changes:
+        - createIndex:
+            tableName: ${table.name}
+            indexName: idx_expense_construction_project
+            columns:
+              - column:
+                  name: project_id
+        - createIndex:
+            tableName: ${table.name}
+            indexName: idx_expense_expense_category
+            columns:
+              - column:
+                  name: category_id
+        - createIndex:
+            tableName: ${table.name}
+            indexName: idx_expense_user
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: ${table.name}-create-constraints
+      changes:
+        - addPrimaryKey:
+            constraintName: PK_${table.name}
+            columnNames: id
+            tableName: ${table.name}

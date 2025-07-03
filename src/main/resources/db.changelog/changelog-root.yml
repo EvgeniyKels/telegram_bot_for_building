@@ -1,0 +1,11 @@
+databaseChangelog:
+  - include:
+      - file: init/users
+  - include:
+      - file: init/construction_project
+  - include:
+      - file: init/expense_category
+  - include:
+      - file: init/expense
+  - include:
+      - file: init/receipt

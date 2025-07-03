@@ -1,0 +1,57 @@
+databaseChangelog:
+  - property:
+      name: table.name
+      value: expense_category
+      global: false
+
+  - property:
+      name: author
+      value: EK
+      global: false
+
+  - changeSet:
+      id: ${table.name}-create-table
+      author: ${author}
+      changes:
+        - createTable:
+            tableName: ${table.name}
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(300)
+                  remarks: название категории
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_construction_project
+                    references: construction_project(id)
+                    onDelete: CASCADE
+
+  - changeSet:
+      id: ${table.name}-create-indexes
+      author: ${author}
+      changes:
+        - createIndex:
+            tableName: ${table.name}
+            indexName: idx_category_project
+            columns:
+              - column:
+                  name: project_id
+
+  - changeSet:
+      id: ${table.name}-create-constraints
+      author: ${author}
+      changes:
+        - addPrimaryKey:
+            constraintName: PK_${table.name}
+            columnNames: id
+            tableName: ${table.name}
