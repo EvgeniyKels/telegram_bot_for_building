@@ -1,4 +1,4 @@
-package kls.tgb.domain;
+package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +16,7 @@ import static kls.tgb.util.StringConstants.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +37,6 @@ public class User {
 
     // Связи
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ConstructionProject> projects = new ArrayList<>();
+    private List<ConstructionProjectEntity> projects = new ArrayList<>();
 
 }

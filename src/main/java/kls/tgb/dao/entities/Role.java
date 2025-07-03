@@ -1,4 +1,4 @@
-package kls.tgb.domain;
+package kls.tgb.dao.entities;
 
 public enum Role {
     USER

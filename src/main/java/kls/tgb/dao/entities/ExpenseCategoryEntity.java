@@ -1,4 +1,4 @@
-package kls.tgb.domain;
+package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +14,7 @@ import static kls.tgb.util.StringConstants.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ExpenseCategory {
+public class ExpenseCategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +26,9 @@ public class ExpenseCategory {
     // Связи
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = PROJECT_ID, nullable = false)
-    private ConstructionProject project;
+    private ConstructionProjectEntity project;
 
     @OneToMany(mappedBy = CATEGORY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Expense> expenses = new ArrayList<>();
+    private List<ExpenseEntity> expenses = new ArrayList<>();
 
 }

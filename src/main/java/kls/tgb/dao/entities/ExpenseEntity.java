@@ -1,4 +1,4 @@
-package kls.tgb.domain;
+package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import static kls.tgb.util.StringConstants.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Expense {
+public class ExpenseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +28,14 @@ public class Expense {
     // Связи
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = PROJECT_ID, nullable = false)
-    private ConstructionProject project;
+    private ConstructionProjectEntity project;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = CATEGORY_ID, nullable = false)
-    private ExpenseCategory category;
+    private ExpenseCategoryEntity category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
-    private User createdBy;
+    private UserEntity createdBy;
 
 }
