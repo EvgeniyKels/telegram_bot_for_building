@@ -35,14 +35,14 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: start_date
-                  type: timestamp without time zone
+                  type: date
                   defaultValue: 'NOW()'
                   remarks: дата начала проекта
                   constraints:
                     nullable: false
               - column:
                   name: end_date
-                  type: timestamp without time zone
+                  type: date
                   defaultValue: 'NOW()'
                   remarks: дата окончания проекта
                   constraints:
