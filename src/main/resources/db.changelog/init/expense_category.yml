@@ -1,4 +1,4 @@
-databaseChangelog:
+databaseChangeLog:
   - property:
       name: table.name
       value: expense_category

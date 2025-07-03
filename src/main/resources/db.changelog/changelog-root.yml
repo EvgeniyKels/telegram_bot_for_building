@@ -1,11 +1,13 @@
-databaseChangelog:
+databaseChangeLog:
   - include:
-      - file: init/users
+      - file: init/users.yml
+      - relativeToChangelogFile: true
   - include:
-      - file: init/construction_project
+      - file: init/construction_project.yml
+      - relativeToChangelogFile: true
   - include:
-      - file: init/expense_category
+      - file: init/expense_category.yml
+      - relativeToChangelogFile: true
   - include:
-      - file: init/expense
-  - include:
-      - file: init/receipt
+      - file: init/expense.yml
+      - relativeToChangelogFile: true

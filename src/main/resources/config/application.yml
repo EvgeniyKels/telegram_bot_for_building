@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tgb_bot
+    username: postgres
+    password: localhost
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db.changelog/changelog-root.yml
+    default-schema: public
+    user: postgres
+    password: localhost
+    url: jdbc:postgresql://localhost:5432/tgb_bot
+    drop-first: false

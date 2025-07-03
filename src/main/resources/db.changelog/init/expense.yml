@@ -1,4 +1,4 @@
-databaseChangelog:
+databaseChangeLog:
   - property:
       name: table.name
       value: expense
@@ -61,6 +61,7 @@ databaseChangelog:
 
   - changeSet:
       id: ${table.name}-create-indexes
+      author: ${author}
       changes:
         - createIndex:
             tableName: ${table.name}
@@ -83,6 +84,7 @@ databaseChangelog:
 
   - changeSet:
       id: ${table.name}-create-constraints
+      author: ${author}
       changes:
         - addPrimaryKey:
             constraintName: PK_${table.name}

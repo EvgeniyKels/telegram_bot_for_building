@@ -1,4 +1,4 @@
-databaseChangelog:
+databaseChangeLog:
   - property:
       name: table.name
       value: users
@@ -24,7 +24,6 @@ databaseChangelog:
               - column:
                   name: telegram_id
                   type: bigint
-                  unique: true
                   remarks: уникальный ID из Telegram
                   constraints:
                     nullable: false
