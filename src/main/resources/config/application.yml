@@ -17,3 +17,8 @@ spring:
     password: localhost
     url: jdbc:postgresql://localhost:5432/tgb_bot
     drop-first: false
+
+telegram:
+  bot:
+    token: ${BOT_TOKEN}
+    username: ${BOT_NAME}

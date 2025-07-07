@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static kls.tgb.util.StringConstants.*;
 
 @Entity
@@ -37,6 +38,14 @@ public class UserEntity {
 
     // Связи
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ConstructionProjectEntity> projects = new ArrayList<>();
+    private List<ConstructionProjectEntity> projects;
+
+    public void addProject(ConstructionProjectEntity project) {
+        if (isNull(projects)) {
+            projects = new ArrayList<>();
+        }
+        projects.add(project);
+        project.setUser(this);
+    }
 
 }

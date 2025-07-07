@@ -23,4 +23,9 @@ public final class StringConstants {
     public static final String USERNAME = "username";
     public static final String ROLE = "role";
     public static final String CREATED_AT = "created_at";
+
+    //константы бота
+    public static final String SLASH = "/";
+    public static final String START = "start";
+    public static final String HELP = "help";
 }

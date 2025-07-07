@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>kls.build</groupId>
-    <artifactId>telegram_building.bot</artifactId>
+    <artifactId>telegram_building_bot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
@@ -50,6 +50,18 @@
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>6.9.7.1</version>
         </dependency>
 
     </dependencies>

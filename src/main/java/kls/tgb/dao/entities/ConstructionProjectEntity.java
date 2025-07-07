@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static kls.tgb.util.StringConstants.*;
 
 @Entity
@@ -40,17 +41,23 @@ public class ConstructionProjectEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = PROJECT, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExpenseEntity> expenses = new ArrayList<>();
+    private List<ExpenseEntity> expenses;
 
     @OneToMany(mappedBy = PROJECT, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExpenseCategoryEntity> categories = new ArrayList<>();
+    private List<ExpenseCategoryEntity> categories;
 
     public void addExpense(ExpenseEntity expense) {
+        if (isNull(expenses)) {
+            expenses = new ArrayList<>();
+        }
         expenses.add(expense);
         expense.setProject(this);
     }
 
     public void addCategory(ExpenseCategoryEntity category) {
+        if (isNull(categories)) {
+            categories = new ArrayList<>();
+        }
         categories.add(category);
         category.setProject(this);
     }
