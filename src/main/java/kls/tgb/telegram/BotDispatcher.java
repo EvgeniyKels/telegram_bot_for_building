@@ -1,22 +1,23 @@
 package kls.tgb.telegram;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import kls.tgb.exception.CommandHandlerException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.isNull;
+import static kls.tgb.util.StringConstants.CANT_FIND_COMMAND_HANDLER;
 import static kls.tgb.util.StringConstants.SLASH;
 
 @Component
+@AllArgsConstructor
 public class BotDispatcher implements Dispatcher {
 
-    @Autowired
-    private final Map<String, CommandHandler> commandHandlerMap = new ConcurrentHashMap<>();
+    private final Map<String, CommandHandler> commandHandlerMap;
 
     @Override
     public void dispatch(Update update) {
@@ -33,13 +34,14 @@ public class BotDispatcher implements Dispatcher {
             final var command = text.split(" ")[0].substring(1);
             final var commandHandler = commandHandlerMap.get(command);
             if (isNull(commandHandler)) {
-                throw new RuntimeException("не найден обработчик команды");
+                throw new CommandHandlerException(CANT_FIND_COMMAND_HANDLER, message.getChatId());
             }
+            commandHandler.handle(message);
         }
     }
 
     private void handleCallback(CallbackQuery callbackQuery) {
-
+        //TODO not implemented
     }
 
 }

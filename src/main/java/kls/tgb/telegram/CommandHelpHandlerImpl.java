@@ -7,6 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class CommandHelpHandlerImpl implements CommandHandler {
     @Override
     public void handle(Message message) {
-
+        //TODO not implemented
     }
 }

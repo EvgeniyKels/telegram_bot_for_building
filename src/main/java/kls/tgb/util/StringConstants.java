@@ -24,8 +24,11 @@ public final class StringConstants {
     public static final String ROLE = "role";
     public static final String CREATED_AT = "created_at";
 
-    //константы бота
+    // константы бота
     public static final String SLASH = "/";
     public static final String START = "start";
     public static final String HELP = "help";
+
+    // сообщения об ошибках
+    public static final String CANT_FIND_COMMAND_HANDLER = "не найден обработчик команды";
 }

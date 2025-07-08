@@ -1,20 +1,17 @@
 package kls.tgb.telegram;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
+@AllArgsConstructor
 public class CommandStartHandlerImpl implements CommandHandler {
 
-    @Autowired
-    private MyTelegramBuildBot telegramBot;
+    private final MessageSender messageSender;
 
     @Override
     public void handle(Message message) {
-        telegramBot.sendMessage(
-                String.valueOf(message.getChatId()),
-                "приветик"
-        );
+        messageSender.sendMessage(String.valueOf(message.getChatId()), "приветик");
     }
 }
