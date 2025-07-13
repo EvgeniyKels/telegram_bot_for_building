@@ -22,3 +22,6 @@ telegram:
   bot:
     token: ${BOT_TOKEN}
     username: ${BOT_NAME}
+  handler:
+    description:
+      start: приветствие, создание / изменение пользователя

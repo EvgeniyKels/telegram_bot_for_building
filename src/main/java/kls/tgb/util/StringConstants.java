@@ -1,5 +1,7 @@
 package kls.tgb.util;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public final class StringConstants {
 
     private StringConstants() {}
@@ -31,4 +33,5 @@ public final class StringConstants {
 
     // сообщения об ошибках
     public static final String CANT_FIND_COMMAND_HANDLER = "не найден обработчик команды";
+
 }

@@ -1,35 +1,32 @@
 package kls.tgb.config;
 
-import kls.tgb.telegram.CommandHandler;
-import kls.tgb.telegram.CommandHelpHandlerImpl;
-import kls.tgb.telegram.CommandStartHandlerImpl;
+import kls.tgb.telegram.commandhandlers.CommandHandler;
+import kls.tgb.telegram.commandhandlers.CommandStartHandlerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static kls.tgb.util.StringConstants.*;
 
 @Configuration
 public class BotCommandConfig {
 
     @Bean
-    public List<BotCommand> botCommands() {
-        return List.of(
-                new BotCommand(SLASH.concat(START), "Регистрация/приветствие"),
-                new BotCommand(SLASH.concat(HELP), "Справка по командам"));
+    public List<BotCommand> botCommands(List<Pair<String, String>> pairs) {
+        return pairs.stream().map(p -> new BotCommand(p.getFirst(), p.getSecond())).toList();
     }
 
     @Bean
     public Map<String, CommandHandler> commandHandlerMap(
-            CommandStartHandlerImpl commandStartHandler,
-            CommandHelpHandlerImpl commandHelpHandler) {
+            CommandStartHandlerImpl commandStartHandler) {
+        final var pairs = List.of(Pair.of(commandStartHandler.getHandlerName(), commandStartHandler.getHandlerDescription()));
+        botCommands(pairs);
         return new ConcurrentHashMap<>(Map.of(
-                START, commandStartHandler,
-                HELP, commandHelpHandler
+                commandStartHandler.getHandlerName(), commandStartHandler
         ));
     }
 
