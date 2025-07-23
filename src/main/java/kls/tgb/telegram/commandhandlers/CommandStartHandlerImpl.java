@@ -1,12 +1,11 @@
 package kls.tgb.telegram.commandhandlers;
 
-import kls.tgb.dao.DbService;
+import kls.tgb.service.DbService;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.telegram.MessageSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.User;
 
 import static kls.tgb.util.StringConstants.*;
 
@@ -28,9 +27,9 @@ public class CommandStartHandlerImpl implements CommandHandler {
 
     @Override
     public void handle(Message message) {
-        User telegramUser = message.getFrom();
-        dbService.registerOrUpdateUser(userMapper.fromTgUserToUserDto(telegramUser));
-        messageSender.sendMessage(String.valueOf(message.getChatId()), "приветик");
+        final var telegramUser = message.getFrom();
+        final var userDto = dbService.registerOrUpdateUser(userMapper.fromTgUserToUserDto(telegramUser));
+        messageSender.sendMessage(String.valueOf(message.getChatId()), "приветик, ".concat(userDto.getUsername())); //TODO приветственное сообщение получать из БД
     }
 
     @Override

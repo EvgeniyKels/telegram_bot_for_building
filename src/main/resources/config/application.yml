@@ -16,7 +16,7 @@ spring:
     user: postgres
     password: localhost
     url: jdbc:postgresql://localhost:5432/tgb_bot
-    drop-first: false
+    drop-first: true
 
 telegram:
   bot:
@@ -25,3 +25,10 @@ telegram:
   handler:
     description:
       start: приветствие, создание / изменение пользователя
+
+logging:
+  level:
+    kls:
+      tgb:
+        service: DEBUG
+    root: INFO

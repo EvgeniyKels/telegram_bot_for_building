@@ -1,5 +1,8 @@
 package kls.tgb.mapper;
 
+import kls.tgb.dao.entities.ConstructionProjectEntity;
+import kls.tgb.dao.entities.UserEntity;
+import kls.tgb.dto.ConstructionProjectDto;
 import kls.tgb.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,4 +15,8 @@ public abstract class UserMapper {
     @Mapping(target = "username", source = "userName")
     public abstract UserDto fromTgUserToUserDto(User telegramUser);
 
+    public abstract UserDto fromUserEntityToUserDto(UserEntity userEntity);
+
+    //TODO изменить на отдельный маппер
+    public abstract ConstructionProjectDto fromConstructionProjectEntityToConstructionProjectDto(ConstructionProjectEntity constructionProjectEntity);
 }

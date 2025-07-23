@@ -15,6 +15,8 @@ import static kls.tgb.util.StringConstants.*;
 @Builder
 public class ExpenseEntity {
 
+    //TODO надо сделать проверку комбинации размера расхода, даты и наименования
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

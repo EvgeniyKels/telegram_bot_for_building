@@ -23,8 +23,7 @@ public class BotDispatcher implements Dispatcher {
     private final Map<String, CommandHandler> commandHandlerMap;
 
     @Override
-    public void dispatch(Update update) {
-        log.info(update.getMessage().getFrom().getId().toString());
+    public void dispatch(final Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             handleMessage(update.getMessage());
         } else if (update.hasCallbackQuery()) {
@@ -32,7 +31,8 @@ public class BotDispatcher implements Dispatcher {
         }
     }
 
-    private void handleMessage(Message message) {
+    private void handleMessage(final Message message) {
+        log.info(message.getFrom().getId().toString());
         final var command = message.getText();
         if (command.startsWith(SLASH)) {
             final var commandHandler = commandHandlerMap.get(command);

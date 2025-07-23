@@ -1,7 +1,5 @@
 package kls.tgb.util;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public final class StringConstants {
 
     private StringConstants() {}

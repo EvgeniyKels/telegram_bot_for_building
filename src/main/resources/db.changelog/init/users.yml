@@ -18,12 +18,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
+                  type: bigserial
                   constraints:
                     nullable: false
               - column:
                   name: telegram_id
                   type: bigint
+#                  добавить индекс на колонку
                   remarks: уникальный ID из Telegram
                   constraints:
                     nullable: false

@@ -1,7 +1,6 @@
 package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,11 +11,6 @@ import static kls.tgb.util.StringConstants.*;
 
 @Entity
 @Table(name = USERS)
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class UserEntity {
 
     @Id
@@ -39,6 +33,39 @@ public class UserEntity {
     // Связи
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConstructionProjectEntity> projects;
+
+    public UserEntity() {}
+
+    public UserEntity(Long telegramId, String username, LocalDateTime createdAt) {
+        this.telegramId = telegramId;
+        this.username = username;
+        this.role = Role.USER;
+        this.createdAt = createdAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getTelegramId() {
+        return telegramId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public List<ConstructionProjectEntity> getProjects() {
+        return projects;
+    }
 
     public void addProject(ConstructionProjectEntity project) {
         if (isNull(projects)) {

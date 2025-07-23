@@ -36,13 +36,7 @@ class UserEntityTest {
         final var startDate = LocalDate.now().minusDays(10);
         final var endDate = LocalDate.now().minusDays(1);
 
-        UserEntity userEntity =
-                UserEntity.builder().
-                    telegramId(telegramId).
-                    username(userName).
-                    role(role).
-                    createdAt(LocalDateTime.now().minusDays(365)).
-                        build();
+        UserEntity userEntity = new UserEntity(telegramId, userName, LocalDateTime.now());
 
         ConstructionProjectEntity constructionProjectEntity =
                 ConstructionProjectEntity.builder().
@@ -69,7 +63,7 @@ class UserEntityTest {
         List<ConstructionProjectEntity> projects = userEntityFromDb.getProjects();
         assertEquals(1, projects.size());
 
-        ConstructionProjectEntity constructionProject = projects.getFirst();
+        ConstructionProjectEntity constructionProject = projects.get(0);
         assertNotNull(constructionProjectEntity.getId());
         assertEquals(projectName, constructionProject.getName());
         assertEquals(0, totalBudget.compareTo(constructionProject.getTotalBudget()));

@@ -8,9 +8,10 @@ import java.util.List;
 
 @Data
 public class UserDto {
-    private final Long telegramId;
-    private final String username;
-    private final Role role;
-    private final LocalDateTime createdAt;
-    private final List<ConstructionProjectDto> projects;
+    private Long id;
+    private Long telegramId;
+    private String username;
+    private Role role;
+    private LocalDateTime createdAt;
+    private List<ConstructionProjectDto> projects;
 }
