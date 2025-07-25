@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Component
 public class MessageSenderImpl implements MessageSender {
 
+    // TODO нарушение d inversion
     private final MyTelegramBuildBot bot;
 
     @Autowired

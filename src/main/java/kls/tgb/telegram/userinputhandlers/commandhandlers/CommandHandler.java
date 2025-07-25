@@ -1,4 +1,4 @@
-package kls.tgb.telegram.commandhandlers;
+package kls.tgb.telegram.userinputhandlers.commandhandlers;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
 

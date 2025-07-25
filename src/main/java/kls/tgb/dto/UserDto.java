@@ -1,6 +1,7 @@
 package kls.tgb.dto;
 
 import kls.tgb.dao.entities.Role;
+import kls.tgb.dto.sm.State;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,4 +15,6 @@ public class UserDto {
     private Role role;
     private LocalDateTime createdAt;
     private List<ConstructionProjectDto> projects;
+    private State state;
+    private String selfUserName;
 }

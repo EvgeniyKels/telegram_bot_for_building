@@ -1,6 +1,6 @@
 package kls.tgb.dto.sm;
 
-public enum RegistrationState {
+public enum State {
     STATE_NOT_EXISTS,
     WAITING_FOR_NAME,
 

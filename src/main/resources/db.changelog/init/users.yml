@@ -35,6 +35,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: self_username
+                  type: varchar(300)
+                  remarks: имя пользователя
+                  constraints:
+                    nullable: false
+              - column:
                   name: role
                   type: varchar(50)
                   remarks: роль пользователя

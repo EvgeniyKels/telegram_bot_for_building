@@ -1,7 +1,8 @@
 package kls.tgb.telegram;
 
 import kls.tgb.exception.CommandHandlerException;
-import kls.tgb.telegram.commandhandlers.CommandHandler;
+import kls.tgb.telegram.userinputhandlers.TextMessageHandler;
+import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import static kls.tgb.util.StringConstants.SLASH;
 public class BotDispatcher implements Dispatcher {
 
     private final Map<String, CommandHandler> commandHandlerMap;
+    private final TextMessageHandler textMessageHandler;
 
     @Override
     public void dispatch(final Update update) {
@@ -33,15 +35,15 @@ public class BotDispatcher implements Dispatcher {
 
     private void handleMessage(final Message message) {
         log.info(message.getFrom().getId().toString());
-        final var command = message.getText();
-        if (command.startsWith(SLASH)) {
-            final var commandHandler = commandHandlerMap.get(command);
+        final var messageText = message.getText();
+        if (messageText.startsWith(SLASH)) {
+            final var commandHandler = commandHandlerMap.get(messageText);
             if (isNull(commandHandler)) {
                 throw new CommandHandlerException(CANT_FIND_COMMAND_HANDLER, message.getChatId());
             }
             commandHandler.handle(message);
         } else {
-            handleTextMessage();
+            textMessageHandler.handleTextMessage(message);
         }
     }
 

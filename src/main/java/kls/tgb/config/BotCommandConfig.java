@@ -1,7 +1,7 @@
 package kls.tgb.config;
 
-import kls.tgb.telegram.commandhandlers.CommandHandler;
-import kls.tgb.telegram.commandhandlers.CommandStartHandlerImpl;
+import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandHandler;
+import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandStartHandlerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.util.Pair;

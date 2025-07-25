@@ -30,17 +30,21 @@ public class UserEntity {
     @Column(name = CREATED_AT, nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = SELF_USERNAME, length = 100)
+    private String selfUserName;
+
     // Связи
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConstructionProjectEntity> projects;
 
     public UserEntity() {}
 
-    public UserEntity(Long telegramId, String username, LocalDateTime createdAt) {
+    public UserEntity(Long telegramId, String username, String selfUserName, LocalDateTime createdAt) {
         this.telegramId = telegramId;
         this.username = username;
-        this.role = Role.USER;
+        this.selfUserName = selfUserName;
         this.createdAt = createdAt;
+        this.role = Role.USER;
     }
 
     public Long getId() {
@@ -65,6 +69,10 @@ public class UserEntity {
 
     public List<ConstructionProjectEntity> getProjects() {
         return projects;
+    }
+
+    public String getSelfUserName() {
+        return selfUserName;
     }
 
     public void addProject(ConstructionProjectEntity project) {

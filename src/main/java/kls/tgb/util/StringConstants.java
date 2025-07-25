@@ -22,6 +22,7 @@ public final class StringConstants {
     public static final String CATEGORY_ID = "category_id";
     public static final String TELEGRAM_ID = "telegram_id";
     public static final String USERNAME = "username";
+    public static final String SELF_USERNAME = "self_username";
     public static final String ROLE = "role";
     public static final String CREATED_AT = "created_at";
 

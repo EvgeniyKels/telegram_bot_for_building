@@ -15,6 +15,7 @@ public abstract class UserMapper {
     @Mapping(target = "username", source = "userName")
     public abstract UserDto fromTgUserToUserDto(User telegramUser);
 
+    @Mapping(target = "selfUserName", source = "selfUserName")
     public abstract UserDto fromUserEntityToUserDto(UserEntity userEntity);
 
     //TODO изменить на отдельный маппер

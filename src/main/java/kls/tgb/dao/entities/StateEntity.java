@@ -1,7 +1,7 @@
 package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
-import kls.tgb.dto.sm.RegistrationState;
+import kls.tgb.dto.sm.State;
 
 import static kls.tgb.util.StringConstants.STATE;
 import static kls.tgb.util.StringConstants.TELEGRAM_ID;
@@ -18,7 +18,7 @@ public class StateEntity {
 
     @Column(name = STATE, nullable = false)
     @Enumerated(EnumType.STRING)
-    private RegistrationState registrationState;
+    private State state;
 
     @Lob
     @Column(length = 1000000)
@@ -26,9 +26,9 @@ public class StateEntity {
 
     public StateEntity() {}
 
-    public StateEntity(Long telegramId, RegistrationState registrationState) {
+    public StateEntity(Long telegramId, State state) {
         this.telegramId = telegramId;
-        this.registrationState = registrationState;
+        this.state = state;
     }
 
     public Long getId() {
@@ -39,16 +39,16 @@ public class StateEntity {
         return telegramId;
     }
 
-    public RegistrationState getRegistrationState() {
-        return registrationState;
+    public State getState() {
+        return state;
     }
 
     public byte[] getData() {
         return data;
     }
 
-    public void setRegistrationState(RegistrationState registrationState) {
-        this.registrationState = registrationState;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public void setData(byte[] data) {

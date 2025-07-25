@@ -32,3 +32,5 @@ logging:
       tgb:
         service: DEBUG
     root: INFO
+    org.springframework.transaction.interceptor: TRACE
+    org.hibernate.engine.transaction: DEBUG

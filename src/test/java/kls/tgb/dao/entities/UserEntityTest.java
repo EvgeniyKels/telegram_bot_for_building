@@ -29,6 +29,7 @@ class UserEntityTest {
     void retrieveUser() {
         final var telegramId = 222L;
         final var userName = "user_name";
+        final var selfUserName = "self_user_name";
         final var role = Role.USER;
 
         final var projectName = "project_name";
@@ -36,7 +37,8 @@ class UserEntityTest {
         final var startDate = LocalDate.now().minusDays(10);
         final var endDate = LocalDate.now().minusDays(1);
 
-        UserEntity userEntity = new UserEntity(telegramId, userName, LocalDateTime.now());
+
+        UserEntity userEntity = new UserEntity(telegramId, userName, selfUserName, LocalDateTime.now());
 
         ConstructionProjectEntity constructionProjectEntity =
                 ConstructionProjectEntity.builder().

@@ -1,13 +1,14 @@
 package kls.tgb.service;
 
+import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
-import kls.tgb.dto.sm.RegistrationState;
+import kls.tgb.dto.sm.State;
 import lombok.NonNull;
 
 public interface DbService {
-    UserDto registerOrUpdateUser(UserDto userDto);
+    UserDto registerOrUpdateUser(final Long telegramId, UserDto selfUserName);
 
-    RegistrationState getStateByTgID(@NonNull Long id);
+    StateDto getStateByTgID(@NonNull Long id);
 
-    void setState(Long telegramId, RegistrationState state);
+    void setState(Long telegramId, State state);
 }
