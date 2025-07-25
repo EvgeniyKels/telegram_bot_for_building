@@ -1,5 +1,6 @@
 package kls.tgb.telegram.commandhandlers;
 
+import kls.tgb.dto.sm.RegistrationState;
 import kls.tgb.service.DbService;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.telegram.MessageSender;
@@ -26,10 +27,33 @@ public class CommandStartHandlerImpl implements CommandHandler {
     }
 
     @Override
+    //TODO приветственное сообщение получать из БД
     public void handle(Message message) {
         final var telegramUser = message.getFrom();
-        final var userDto = dbService.registerOrUpdateUser(userMapper.fromTgUserToUserDto(telegramUser));
-        messageSender.sendMessage(String.valueOf(message.getChatId()), "приветик, ".concat(userDto.getUsername())); //TODO приветственное сообщение получать из БД
+        RegistrationState registrationState = dbService.getStateByTgID(telegramUser.getId());
+        System.out.println(registrationState);
+        switch (registrationState) {
+            case STATE_NOT_EXISTS -> {
+                dbService.setState(telegramUser.getId(), RegistrationState.WAITING_FOR_NAME); // предложить ввести свое имя, написать что то про бот
+                messageSender.sendMessage(String.valueOf(message.getChatId()), "приветик, как тебя звать ?");
+            }
+            case WAITING_FOR_NAME -> {
+                final var userDto = dbService.registerOrUpdateUser(userMapper.fromTgUserToUserDto(telegramUser));
+                messageSender.sendMessage(String.valueOf(message.getChatId()), "приветик, ".concat(userDto.getUsername()));
+            }
+            case NEW_USER_REGISTERED -> {
+                messageSender.sendMessage(String.valueOf(message.getChatId()), "поздравляю с регистрацией");
+            }
+            case USER_EXISTS -> {
+                messageSender.sendMessage(String.valueOf(message.getChatId()), "юзер существует");
+            }
+//            case PROJECT_EXISTS -> null;
+//            case PROJECT_NOT_EXISTS -> null;
+//            case CHOOSE_PROJECT -> null;
+//            case CREATING_PROJECT -> null;
+//            case PROJECT_CREATED -> null;
+        }
+
     }
 
     @Override

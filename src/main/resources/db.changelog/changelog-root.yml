@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       - file: init/expense.yml
       - relativeToChangelogFile: true
+  - include:
+      - file: 1_table_for_sm/state.yml
+      - relativeToChangelogFile: true

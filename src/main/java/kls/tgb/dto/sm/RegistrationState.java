@@ -1,0 +1,17 @@
+package kls.tgb.dto.sm;
+
+public enum RegistrationState {
+    STATE_NOT_EXISTS,
+    WAITING_FOR_NAME,
+
+    USER_EXISTS,
+    NEW_USER_REGISTERED,
+
+    PROJECT_EXISTS,
+    PROJECT_NOT_EXISTS,
+
+    CHOOSE_PROJECT,
+    CREATING_PROJECT,
+
+    PROJECT_CREATED
+}

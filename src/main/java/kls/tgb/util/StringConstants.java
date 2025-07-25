@@ -9,6 +9,7 @@ public final class StringConstants {
     public static final String EXPENSE = "expense";
     public static final String EXPENSE_CATEGORY = "expense_category";
     public static final String USERS = "users";
+    public static final String STATE = "state";
 
     // имена колонок
     public static final String TOTAL_BUDGET = "total_budget";

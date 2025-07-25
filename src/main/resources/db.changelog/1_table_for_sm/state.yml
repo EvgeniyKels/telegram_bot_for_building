@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - property:
+      name: table.name
+      value: state
+      global: false
+
+  - property:
+      name: author
+      value: EK
+      global: false
+
+  - changeSet:
+      id: ${table.name}-create-table
+      author: ${author}
+      changes:
+        - createTable:
+            tableName: ${table.name}
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TELEGRAM_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: STATE
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DATA
+                  type: BLOB
+
+  - changeSet:
+      id: ${table.name}-create-indexes
+      author: ${author}
+      changes:
+        - createIndex:
+            tableName: ${table.name}
+            indexName: idx_user_state
+            columns:
+              - column:
+                  name: id
+
+  - changeSet:
+      id: ${table.name}-create-constraints
+      author: ${author}
+      changes:
+        - addPrimaryKey:
+            constraintName: PK_${table.name}
+            columnNames: id
+            tableName: ${table.name}

@@ -40,6 +40,8 @@ public class BotDispatcher implements Dispatcher {
                 throw new CommandHandlerException(CANT_FIND_COMMAND_HANDLER, message.getChatId());
             }
             commandHandler.handle(message);
+        } else {
+            handleTextMessage();
         }
     }
 
