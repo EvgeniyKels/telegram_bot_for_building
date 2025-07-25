@@ -30,33 +30,33 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public UserDto registerOrUpdateUser(final Long telegramId, UserDto userDto) {
+    public UserDto getOrCreateUser(final Long telegramId, UserDto userDto) {
         return userRepo.findByTelegramId(telegramId).map(x -> {
             log.debug("User already exists with telegram id {}", telegramId);
-            setState(telegramId, State.USER_EXISTS);
             return userMapper.fromUserEntityToUserDto(x);
         }).orElseGet(() -> {
             log.debug("User does not exist with telegram id {}", telegramId);
-            final var savedEntity = saveUser(userDto);
-            setState(telegramId, State.NEW_USER_REGISTERED);
-            return userMapper.fromUserEntityToUserDto(savedEntity);
+            return userMapper.fromUserEntityToUserDto(saveUser(userDto));
         });
 
     }
 
     @Override
     @Transactional
-    public void setState(Long telegramId, State state) {
+    public State setState(Long telegramId, State state) {
         Optional<StateEntity> stateRepoByTelegramId = stateRepo.findByTelegramId(telegramId);
+
+        StateEntity savedEntity;
 
         if (stateRepoByTelegramId.isPresent()) {
             StateEntity stateEntity = stateRepoByTelegramId.get();
             stateEntity.setState(state);
-            stateRepo.save(stateEntity);
+            savedEntity = stateRepo.save(stateEntity);
         } else {
-            stateRepo.save(new StateEntity(telegramId, state));
+            savedEntity = stateRepo.save(new StateEntity(telegramId, state));
         }
 
+        return savedEntity.getState();
     }
 
     @Override

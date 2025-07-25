@@ -18,18 +18,16 @@ public class StateMachineImpl /* implements StateMachine */ {
         final var state = userDto.getState();
         switch (state) {
             case STATE_NOT_EXISTS -> {
-                dbService.setState(userTgId, WAITING_FOR_NAME); // предложить ввести свое имя, написать что то про бот
+                userDto.setState(dbService.setState(userTgId, WAITING_FOR_NAME));
                 return "приветик, как тебя звать ?";
             }
             case WAITING_FOR_NAME -> {
-                final var userDtoAfterSaveUpdate = dbService.registerOrUpdateUser(userTgId, userDto);
+                final var userDtoAfterSaveUpdate = dbService.getOrCreateUser(userTgId, userDto);
+                userDto.setState(dbService.setState(userTgId, NEW_USER_REGISTERED));
                 return "приятно познакомиться, ".concat(userDtoAfterSaveUpdate.getSelfUserName());
             }
             case NEW_USER_REGISTERED -> {
                 return "поздравляю с регистрацией";
-            }
-            case USER_EXISTS -> {
-                return "юзер существует";
             }
 //            case PROJECT_EXISTS -> null;
 //            case PROJECT_NOT_EXISTS -> null;

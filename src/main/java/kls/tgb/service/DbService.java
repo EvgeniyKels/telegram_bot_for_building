@@ -6,9 +6,9 @@ import kls.tgb.dto.sm.State;
 import lombok.NonNull;
 
 public interface DbService {
-    UserDto registerOrUpdateUser(final Long telegramId, UserDto selfUserName);
+    UserDto getOrCreateUser(final Long telegramId, UserDto selfUserName);
 
     StateDto getStateByTgID(@NonNull Long id);
 
-    void setState(Long telegramId, State state);
+    State setState(Long telegramId, State state);
 }

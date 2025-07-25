@@ -4,7 +4,7 @@ public enum State {
     STATE_NOT_EXISTS,
     WAITING_FOR_NAME,
 
-    USER_EXISTS,
+//    USER_EXISTS,
     NEW_USER_REGISTERED,
 
     PROJECT_EXISTS,
