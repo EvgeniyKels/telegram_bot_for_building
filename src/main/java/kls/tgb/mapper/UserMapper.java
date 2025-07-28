@@ -18,6 +18,4 @@ public abstract class UserMapper {
     @Mapping(target = "selfUserName", source = "selfUserName")
     public abstract UserDto fromUserEntityToUserDto(UserEntity userEntity);
 
-    //TODO изменить на отдельный маппер
-    public abstract ConstructionProjectDto fromConstructionProjectEntityToConstructionProjectDto(ConstructionProjectEntity constructionProjectEntity);
 }

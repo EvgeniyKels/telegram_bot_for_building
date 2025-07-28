@@ -1,9 +1,13 @@
 package kls.tgb.service;
 
+import kls.tgb.dto.ConstructionProjectDto;
 import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.State;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static kls.tgb.dto.sm.State.*;
 
@@ -27,7 +31,17 @@ public class StateMachineImpl /* implements StateMachine */ {
                 return "приятно познакомиться, ".concat(userDtoAfterSaveUpdate.getSelfUserName());
             }
             case NEW_USER_REGISTERED -> {
-                return "поздравляю с регистрацией";
+                // получаем данные о проектах или предлагаем создать новый
+                List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
+                if (allUserProjects.isEmpty()) {
+                    return "поздравляю с регистрацией. У вас нет проектов";
+                } else {
+                    return "поздравляю с регистрацией. Вот список ваших проектов: ".
+                            concat(
+                                    allUserProjects.stream().
+                                            map(Object::toString).collect(Collectors.joining(", ")));
+                }
+
             }
 //            case PROJECT_EXISTS -> null;
 //            case PROJECT_NOT_EXISTS -> null;

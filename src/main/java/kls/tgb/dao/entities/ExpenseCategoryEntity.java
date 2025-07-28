@@ -28,7 +28,7 @@ public class ExpenseCategoryEntity {
     @JoinColumn(name = PROJECT_ID, nullable = false)
     private ConstructionProjectEntity project;
 
-    @OneToMany(mappedBy = CATEGORY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = CATEGORY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseEntity> expenses = new ArrayList<>();
 
 }

@@ -34,7 +34,7 @@ public class UserEntity {
     private String selfUserName;
 
     // Связи
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConstructionProjectEntity> projects;
 
     public UserEntity() {}

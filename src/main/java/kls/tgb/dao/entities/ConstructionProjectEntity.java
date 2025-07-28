@@ -40,10 +40,10 @@ public class ConstructionProjectEntity {
     @JoinColumn(name = USER_ID, nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = PROJECT, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROJECT, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseEntity> expenses;
 
-    @OneToMany(mappedBy = PROJECT, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROJECT, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseCategoryEntity> categories;
 
     public void addExpense(ExpenseEntity expense) {
