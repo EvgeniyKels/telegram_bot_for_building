@@ -2,11 +2,12 @@ package kls.tgb.service;
 
 import kls.tgb.dto.ConstructionProjectDto;
 import kls.tgb.dto.UserDto;
+import kls.tgb.dto.sm.MessageButtonHolder;
 import kls.tgb.dto.sm.State;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static kls.tgb.dto.sm.State.*;
@@ -17,34 +18,45 @@ public class StateMachineImpl /* implements StateMachine */ {
 
     private final DbService dbService;
 
-    //TODO приветственное сообщение получать из БД
-    public String handleState(final Long userTgId, final UserDto userDto) {
+    //TODO приветственное сообщение получать из конфига
+    public MessageButtonHolder handleState(final Long userTgId, final UserDto userDto) {
         final var state = userDto.getState();
         switch (state) {
             case STATE_NOT_EXISTS -> {
                 userDto.setState(dbService.setState(userTgId, WAITING_FOR_NAME));
-                return "приветик, как тебя звать ?";
+                return new MessageButtonHolder("приветик, как тебя звать ?", null);
             }
             case WAITING_FOR_NAME -> {
                 final var userDtoAfterSaveUpdate = dbService.getOrCreateUser(userTgId, userDto);
                 userDto.setState(dbService.setState(userTgId, NEW_USER_REGISTERED));
-                return "приятно познакомиться, ".concat(userDtoAfterSaveUpdate.getSelfUserName());
+                return new MessageButtonHolder(
+                        "приятно познакомиться, ".concat(userDtoAfterSaveUpdate.getSelfUserName()).concat(" Поздравляю с регистрацией. Перейдем к проектам ? "),
+                        Map.of("Да", "Yes", "Нет", "No"));
             }
             case NEW_USER_REGISTERED -> {
                 // получаем данные о проектах или предлагаем создать новый
                 List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
                 if (allUserProjects.isEmpty()) {
-                    return "поздравляю с регистрацией. У вас нет проектов";
+                    userDto.setState(dbService.setState(userTgId, PROJECT_NOT_EXISTS));
+                    return new MessageButtonHolder(
+                            "У вас нет проектов. Хотите создать новый ?",
+                            Map.of("Да", "Yes", "Нет", "No"));
                 } else {
-                    return "поздравляю с регистрацией. Вот список ваших проектов: ".
-                            concat(
-                                    allUserProjects.stream().
-                                            map(Object::toString).collect(Collectors.joining(", ")));
+                    userDto.setState(dbService.setState(userTgId, PROJECT_EXISTS));
+                    Map<String, String> map = allUserProjects.stream().map(Objects::toString).collect(Collectors.toMap(s -> s, s -> s));
+                    map.put("новый", "new");
+                    return new MessageButtonHolder(
+                            "Вот список ваших проектов, выберети нужный иди создайте новый ",
+                            Collections.unmodifiableMap(map)
+                    );
                 }
-
             }
-//            case PROJECT_EXISTS -> null;
-//            case PROJECT_NOT_EXISTS -> null;
+            case PROJECT_NOT_EXISTS -> {
+                System.out.println(userDto);
+            }
+            case PROJECT_EXISTS -> {
+                System.out.println(userDto);
+            }
 //            case CHOOSE_PROJECT -> null;
 //            case CREATING_PROJECT -> null;
 //            case PROJECT_CREATED -> null;

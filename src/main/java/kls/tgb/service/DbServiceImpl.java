@@ -70,6 +70,7 @@ public class DbServiceImpl implements DbService {
 //    @Transactional
     public List<ConstructionProjectDto> getAllUserProjects(Long userTgId) {
         Optional<UserEntity> userEntityOptional = userRepo.findByTelegramId(userTgId);
+
         if (userEntityOptional.isPresent()) {
             UserEntity userEntity = userEntityOptional.get();
             return constructionProjectRepo.findConstructionProjectEntitiesByUser(userEntity).

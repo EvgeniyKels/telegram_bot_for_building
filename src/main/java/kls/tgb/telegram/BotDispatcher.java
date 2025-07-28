@@ -1,6 +1,7 @@
 package kls.tgb.telegram;
 
 import kls.tgb.exception.CommandHandlerException;
+import kls.tgb.telegram.userinputhandlers.CallbackQueryHandler;
 import kls.tgb.telegram.userinputhandlers.TextMessageHandler;
 import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandHandler;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class BotDispatcher implements Dispatcher {
 
     private final Map<String, CommandHandler> commandHandlerMap;
     private final TextMessageHandler textMessageHandler;
+    private final CallbackQueryHandler callbackQueryHandler;
 
     @Override
     public void dispatch(final Update update) {
@@ -48,7 +50,7 @@ public class BotDispatcher implements Dispatcher {
     }
 
     private void handleCallback(CallbackQuery callbackQuery) {
-        //TODO not implemented
+        callbackQueryHandler.handleCallbackQuery(callbackQuery);
     }
 
 }

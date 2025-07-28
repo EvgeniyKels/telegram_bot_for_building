@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public abstract class ConstructionProjectMapper {
 
-    //TODO изменить на отдельный маппер
-    public abstract ConstructionProjectDto fromConstructionProjectEntityToConstructionProjectDto(ConstructionProjectEntity constructionProjectEntity);
+    public abstract ConstructionProjectDto fromConstructionProjectEntityToConstructionProjectDto
+            (ConstructionProjectEntity entity);
 
 }
