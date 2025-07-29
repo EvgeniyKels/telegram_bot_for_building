@@ -25,6 +25,7 @@ telegram:
   handler:
     description:
       start: приветствие, создание / изменение пользователя
+      remove: обнуляет состояние проектов
 
 logging:
   level:

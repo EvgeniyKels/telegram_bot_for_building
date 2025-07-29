@@ -29,9 +29,21 @@ public final class StringConstants {
     // константы бота
     public static final String SLASH = "/";
     public static final String START = "start";
-    public static final String HELP = "help";
+    public static final String REMOVE = "remove";
+
+    public static final String YOU_HAVE_NOT_PROJECTS = "У вас нет проектов. Хотите создать новый ?";
+    public static final String YES = "Да";
+    public static final String NO = "Нет";
+    public static final String ITS_YOU_PROJECTS = "Вот ваши проекты. Выберите любой.";
+    public static final String BYE_MESSAGE = "рад был познакомиться, пока!";
+    public static final String ENTER_PROJECT_NAME = "введите название проекта";
+    public static final String GREETINGS = "привет, ";
+    public static final String LETS_SEE_PROJECTS = "  Перейдем к проектам ?";
+    public static final String WHAT_IS_YOUR_NAME = "приветик, как тебя звать ?";
+    public static final String INPUT_EXCHANGES = "поздравляшки. Теперь можно вносить расходы";
 
     // сообщения об ошибках
     public static final String CANT_FIND_COMMAND_HANDLER = "не найден обработчик команды";
+    public static final String CHANGE_NAME_RESTRICTION = "пользователь не может менять имя после регистрации";
 
 }

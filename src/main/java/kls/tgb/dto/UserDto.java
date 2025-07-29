@@ -21,4 +21,5 @@ public class UserDto {
     private String newProjectName;
     private Actions userAction;
     private Boolean isNewUser;
+    private Long chatId;
 }

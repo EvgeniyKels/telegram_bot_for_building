@@ -2,7 +2,7 @@ package kls.tgb.telegram.userinputhandlers;
 
 import kls.tgb.dto.sm.State;
 import kls.tgb.mapper.UserMapper;
-import kls.tgb.service.StateMachineImpl;
+import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @AllArgsConstructor
 public class TextMessageHandlerImpl implements TextMessageHandler {
 
-    private final StateMachineImpl stateMachine;
+    private final StateMachine stateMachine;
     private final UserMapper userMapper;
     private final MessageSender messageSender;
 
@@ -21,6 +21,7 @@ public class TextMessageHandlerImpl implements TextMessageHandler {
         final var telegramUser = message.getFrom();
         final var userDto = userMapper.fromTgUserToUserDto(telegramUser);
         final var chatId = message.getChatId();
+        userDto.setChatId(chatId);
 
         final var registrationState = stateMachine.getUserState(userDto.getTelegramId());
         userDto.setState(registrationState);
@@ -30,7 +31,7 @@ public class TextMessageHandlerImpl implements TextMessageHandler {
             userDto.setNewProjectName(message.getText());
         }
 
-        final var userMessage = stateMachine.handleState(userDto.getTelegramId(), userDto);
+        final var userMessage = stateMachine.handleStartCommandStates(userDto.getTelegramId(), userDto);
 
         messageSender.sendMessage(String.valueOf(chatId), userMessage);
     }

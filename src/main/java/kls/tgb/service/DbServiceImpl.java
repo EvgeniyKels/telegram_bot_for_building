@@ -40,7 +40,7 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public UserDto getOrCreateUser(final Long telegramId, UserDto userDto) {
+    public UserDto getOrCreateUser(@NonNull final Long telegramId, @NonNull final UserDto userDto) {
         return userRepo.findByTelegramId(telegramId).map(x -> {
             log.debug("User already exists with telegram id {}", telegramId);
             UserDto userDtoFromDb = userMapper.fromUserEntityToUserDto(x);
@@ -57,13 +57,13 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public State setState(Long telegramId, State state) {
+    public State setState(@NonNull final Long telegramId, @NonNull final State state) {
         return setState(telegramId, state, new byte[0]);
     }
 
     @Override
     @Transactional
-    public State setState(Long telegramId, State state, byte[] data) {
+    public State setState(@NonNull final Long telegramId, @NonNull final State state, byte[] data) {
         Optional<StateEntity> stateRepoByTelegramId = stateRepo.findByTelegramId(telegramId);
 
         StateEntity stateEntity;
@@ -75,16 +75,14 @@ public class DbServiceImpl implements DbService {
             stateEntity = new StateEntity(telegramId, state);
         }
 
-        if (data.length != 0) {
-            stateEntity.setData(data);
-        }
+        stateEntity.setData(data);
 
         return stateRepo.save(stateEntity).getState();
     }
 
     @Override
-    @Transactional
-    public List<ConstructionProjectDto> getAllUserProjects(Long userTgId) {
+    @Transactional(readOnly = true)
+    public List<ConstructionProjectDto> getAllUserProjects(@NonNull final Long userTgId) {
         Optional<UserEntity> userEntityOptional = userRepo.findByTelegramId(userTgId);
 
         if (userEntityOptional.isPresent()) {
@@ -100,18 +98,18 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public void removeState(Long userTgId) {
+    public void removeState(@NonNull final Long userTgId) {
         stateRepo.deleteByTelegramId(userTgId);
     }
 
     @Override
-    public boolean isUserExists(Long userTgId) {
+    public boolean isUserExists(@NonNull final Long userTgId) {
         return userRepo.existsByTelegramId(userTgId);
     }
 
     @Override
     @Transactional
-    public Long createNewProject(UserDto userDto) {
+    public Long createNewProject(@NonNull final UserDto userDto) {
         UserEntity userEntity = userRepo.findByTelegramId(userDto.getTelegramId()).orElseThrow();
         ConstructionProjectEntity newProject = new ConstructionProjectEntity();
         newProject.setName("Project without name");
@@ -119,20 +117,19 @@ public class DbServiceImpl implements DbService {
         newProject.setStartDate(LocalDate.now());
         userEntity.addProject(newProject);
         ConstructionProjectEntity projectEntity = constructionProjectRepo.save(newProject);
-        userRepo.save(userEntity);
         return projectEntity.getId();
     }
 
     @Override
     @Transactional
-    public void updateProjectName(Long userTgId, Long projectId, UserDto userDto) {
+    public void updateProjectName(@NonNull final Long userTgId, @NonNull final Long projectId, @NonNull final UserDto userDto) {
         ConstructionProjectEntity constructionProjectEntity = constructionProjectRepo.findById(projectId).orElseThrow();
         constructionProjectEntity.setName(userDto.getNewProjectName());
         constructionProjectRepo.save(constructionProjectEntity);
     }
 
     @Override
-    @Transactional(readOnly = true) //TODO а нада ?
+    @Transactional(readOnly = true)
     public StateDto getStateByTgID(@NonNull Long telegramId) {
         final var stateEntityOptional = stateRepo.findByTelegramId(telegramId);
         return stateEntityOptional.map(stateMapper::fromStateEntityToStateDto).orElseGet(() -> {

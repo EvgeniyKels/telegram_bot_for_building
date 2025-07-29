@@ -1,8 +1,11 @@
 package kls.tgb.telegram.userinputhandlers.commandhandlers;
 
 import kls.tgb.mapper.UserMapper;
+import kls.tgb.service.StateMachine;
 import kls.tgb.service.StateMachineImpl;
 import kls.tgb.telegram.MessageSender;
+import kls.tgb.telegram.userinputhandlers.PreHandleDataHolder;
+import kls.tgb.telegram.userinputhandlers.UserInputHandlerUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -13,30 +16,26 @@ import static kls.tgb.util.StringConstants.*;
 public class CommandStartHandlerImpl implements CommandHandler {
 
     private final MessageSender messageSender;
-    private final StateMachineImpl stateMachine; //TODO поменяй на интерфейс и вынеси в абстрактный класс
-    private final UserMapper userMapper;
-
+    private final StateMachine stateMachine;
+    private final UserInputHandlerUtils userInputHandlerUtils;
 
     @Value("${telegram.handler.description.start}")
     private String startHandlerDescription;
 
-    public CommandStartHandlerImpl(MessageSender messageSender, UserMapper userMapper, StateMachineImpl stateMachine) {
+    public CommandStartHandlerImpl(MessageSender messageSender, UserInputHandlerUtils userInputHandlerUtils, StateMachine stateMachine) {
         this.messageSender = messageSender;
-        this.userMapper = userMapper;
+        this.userInputHandlerUtils = userInputHandlerUtils;
         this.stateMachine = stateMachine;
     }
 
     @Override
     public void handle(Message message) {
-        final var telegramUser = message.getFrom();
-        final var userDto = userMapper.fromTgUserToUserDto(telegramUser);
-        final var chatId = message.getChatId();
+        final var prepareHandlerData = userInputHandlerUtils.prepareHandlerData(message);
+        final var registrationState = stateMachine.getUserState(prepareHandlerData.userDto().getTelegramId());
+        prepareHandlerData.userDto().setState(registrationState);
+        final var messageButtonHolder = stateMachine.handleStartCommandStates(prepareHandlerData.userDto().getTelegramId(), prepareHandlerData.userDto());
 
-        final var registrationState = stateMachine.getUserState(userDto.getTelegramId());
-        userDto.setState(registrationState);
-        final var messageButtonHolder = stateMachine.handleState(userDto.getTelegramId(), userDto);
-
-        messageSender.sendMessage(String.valueOf(chatId), messageButtonHolder);
+        messageSender.sendMessage(String.valueOf(prepareHandlerData.userDto().getChatId()), messageButtonHolder);
     }
 
     @Override
