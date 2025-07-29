@@ -1,5 +1,6 @@
 package kls.tgb.telegram;
 
+import kls.tgb.dto.sm.Actions;
 import kls.tgb.dto.sm.MessageButtonHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -29,7 +30,9 @@ public class MessageSenderImpl implements MessageSender {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(messageButtonHolder.message());
-        sendMessage.setReplyMarkup(createKeyboard(messageButtonHolder.buttons()));
+        if (messageButtonHolder.buttons() != null) {
+            sendMessage.setReplyMarkup(createKeyboard(messageButtonHolder.buttons()));
+        }
         bot.sendMessage(sendMessage);
     }
 
@@ -38,7 +41,7 @@ public class MessageSenderImpl implements MessageSender {
         bot.sendMessage(new SendMessage(chatId, message));
     }
 
-    private ReplyKeyboard createKeyboard(Map<String, String> buttonMap) {
+    private ReplyKeyboard createKeyboard(Map<String, Actions> buttonMap) {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
@@ -46,7 +49,7 @@ public class MessageSenderImpl implements MessageSender {
             List<InlineKeyboardButton> row = new ArrayList<>();
             InlineKeyboardButton button = new InlineKeyboardButton();
             button.setText(key);
-            button.setCallbackData(value);
+            button.setCallbackData(value.name());
             row.add(button);
             keyboard.add(row);
         });

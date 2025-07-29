@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface StateRepo  extends CrudRepository<StateEntity, Long> {
     Optional<StateEntity> findByTelegramId(Long telegramId);
+
+    void deleteByTelegramId(Long userTgId);
 }

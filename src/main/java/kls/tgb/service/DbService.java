@@ -15,5 +15,15 @@ public interface DbService {
 
     State setState(Long telegramId, State state);
 
+    State setState(Long telegramId, State state, byte[] data);
+
     List<ConstructionProjectDto> getAllUserProjects(Long userTgId);
+
+    void removeState(Long userTgId);
+
+    boolean isUserExists(Long userTgId);
+
+    Long createNewProject(UserDto userDto);
+
+    void updateProjectName(Long userTgId, Long projectId, UserDto userDto);
 }

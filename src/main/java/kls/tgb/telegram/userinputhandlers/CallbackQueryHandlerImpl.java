@@ -1,5 +1,6 @@
 package kls.tgb.telegram.userinputhandlers;
 
+import kls.tgb.dto.sm.Actions;
 import kls.tgb.dto.sm.MessageButtonHolder;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachineImpl;
@@ -25,6 +26,7 @@ public class CallbackQueryHandlerImpl implements CallbackQueryHandler {
 
         final var registrationState = stateMachine.getUserState(userDto.getTelegramId());
         userDto.setState(registrationState);
+        userDto.setUserAction(Actions.valueOf(callbackQuery.getData()));
 
         MessageButtonHolder messageButtonHolder = stateMachine.handleState(userDto.getTelegramId(), userDto);
 

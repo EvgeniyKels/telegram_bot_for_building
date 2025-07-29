@@ -26,6 +26,8 @@ public class TextMessageHandlerImpl implements TextMessageHandler {
         userDto.setState(registrationState);
         if (State.WAITING_FOR_NAME.equals(registrationState)) {
             userDto.setSelfUserName(message.getText());
+        } if (State.BLANK_PROJECT_CREATED.equals(registrationState)) {
+            userDto.setNewProjectName(message.getText());
         }
 
         final var userMessage = stateMachine.handleState(userDto.getTelegramId(), userDto);
