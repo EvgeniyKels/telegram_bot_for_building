@@ -1,13 +1,13 @@
 package kls.tgb.dto;
 
-import kls.tgb.dto.sm.State;
+import kls.tgb.dto.sm.StartCommandState;
 import lombok.Data;
 
 @Data
 public class StateDto {
 
     private Long telegramId;
-    private State state;
+    private StartCommandState state;
     private byte[] data;
 
 }

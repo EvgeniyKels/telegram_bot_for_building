@@ -9,7 +9,7 @@ import kls.tgb.dao.repo.UserRepo;
 import kls.tgb.dto.ConstructionProjectDto;
 import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
-import kls.tgb.dto.sm.State;
+import kls.tgb.dto.sm.StartCommandState;
 import kls.tgb.mapper.ConstructionProjectMapper;
 import kls.tgb.mapper.StateMapper;
 import kls.tgb.mapper.UserMapper;
@@ -57,13 +57,13 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public State setState(@NonNull final Long telegramId, @NonNull final State state) {
+    public StartCommandState setState(@NonNull final Long telegramId, @NonNull final StartCommandState state) {
         return setState(telegramId, state, new byte[0]);
     }
 
     @Override
     @Transactional
-    public State setState(@NonNull final Long telegramId, @NonNull final State state, byte[] data) {
+    public StartCommandState setState(@NonNull final Long telegramId, @NonNull final StartCommandState state, byte[] data) {
         Optional<StateEntity> stateRepoByTelegramId = stateRepo.findByTelegramId(telegramId);
 
         StateEntity stateEntity;
@@ -135,7 +135,7 @@ public class DbServiceImpl implements DbService {
         return stateEntityOptional.map(stateMapper::fromStateEntityToStateDto).orElseGet(() -> {
             StateDto stateDto = new StateDto();
             stateDto.setTelegramId(telegramId);
-            stateDto.setState(State.STATE_NOT_EXISTS);
+            stateDto.setState(StartCommandState.STATE_NOT_EXISTS);
             return stateDto;
         });
     }

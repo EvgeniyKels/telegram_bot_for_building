@@ -1,10 +1,9 @@
 package kls.tgb.telegram.userinputhandlers.commandhandlers;
 
+import kls.tgb.dto.UserDto;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachine;
-import kls.tgb.service.StateMachineImpl;
 import kls.tgb.telegram.MessageSender;
-import kls.tgb.telegram.userinputhandlers.UserInputHandlerUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,21 +16,24 @@ public class CommandReloadHandlerImpl implements CommandHandler{
     @Value("${telegram.handler.description.remove}")
     private String startHandlerDescription;
 
-    private final UserInputHandlerUtils userInputHandlerUtils;
-    private final StateMachine stateMachine;
+    private final StateMachine<UserDto> stateMachine;
     private final MessageSender messageSender;
+    private final UserMapper userMapper;
 
-    public CommandReloadHandlerImpl(UserInputHandlerUtils userInputHandlerUtils, StateMachine stateMachine, MessageSender messageSender) {
-        this.userInputHandlerUtils = userInputHandlerUtils;
+    public CommandReloadHandlerImpl(StateMachine<UserDto> stateMachine, MessageSender messageSender, UserMapper userMapper) {
         this.stateMachine = stateMachine;
         this.messageSender = messageSender;
+        this.userMapper = userMapper;
     }
 
     @Override
     public void handle(Message message) {
-        final var prepareHandlerData = userInputHandlerUtils.prepareHandlerData(message);
-        stateMachine.removeUserState(prepareHandlerData.userDto().getTelegramId());
-        messageSender.sendMessage(String.valueOf(prepareHandlerData.chatId()), "удалено");
+        final var telegramUser = message.getFrom();
+        final var userDto = userMapper.fromTgUserToUserDto(telegramUser);
+        final var chatId = message.getChatId();
+        userDto.setChatId(chatId);
+        stateMachine.removeUserState(userDto.getTelegramId());
+        messageSender.sendMessage(String.valueOf(userDto.getChatId()), "удалено");
     }
 
     @Override

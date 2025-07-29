@@ -1,5 +1,6 @@
 package kls.tgb.telegram.userinputhandlers;
 
+import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.Actions;
 import kls.tgb.dto.sm.MessageButtonHolder;
 import kls.tgb.mapper.UserMapper;
@@ -13,21 +14,25 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @AllArgsConstructor
 public class CallbackQueryHandlerImpl implements CallbackQueryHandler {
 
-    private final UserInputHandlerUtils userInputHandlerUtils;
-    private final StateMachine stateMachine;
+    private final StateMachine<UserDto> stateMachine;
     private final MessageSender messageSender;
+    private final UserMapper userMapper;
 
     @Override
     public void handleCallbackQuery(CallbackQuery callbackQuery) {
 
-        PreHandleDataHolder preHandleDataHolder = userInputHandlerUtils.prepareHandlerData(callbackQuery);
-        final var registrationState = stateMachine.getUserState(preHandleDataHolder.userDto().getTelegramId());
-        preHandleDataHolder.userDto().setState(registrationState);
-        preHandleDataHolder.userDto().setUserAction(Actions.valueOf(callbackQuery.getData()));
+        final var telegramUser = callbackQuery.getFrom();
+        final var userDto = userMapper.fromTgUserToUserDto(telegramUser);
+        final var chatId = callbackQuery.getMessage().getChatId();
+        userDto.setChatId(chatId);
 
-        MessageButtonHolder messageButtonHolder = stateMachine.handleStartCommandStates(preHandleDataHolder.userDto().getTelegramId(), preHandleDataHolder.userDto());
+        final var registrationState = stateMachine.getUserState(userDto.getTelegramId());
+        userDto.setState(registrationState);
+        userDto.setUserAction(Actions.valueOf(callbackQuery.getData()));
 
-        messageSender.sendMessage(String.valueOf(preHandleDataHolder.chatId()), messageButtonHolder);
+        MessageButtonHolder messageButtonHolder = stateMachine.handleStartCommandStates(userDto.getTelegramId(), userDto);
+
+        messageSender.sendMessage(String.valueOf(userDto.getChatId()), messageButtonHolder);
 
     }
 }

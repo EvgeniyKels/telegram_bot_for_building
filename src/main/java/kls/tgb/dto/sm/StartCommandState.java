@@ -1,6 +1,6 @@
 package kls.tgb.dto.sm;
 
-public enum State {
+public enum StartCommandState {
     STATE_NOT_EXISTS,
     WAITING_FOR_NAME,
 

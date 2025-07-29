@@ -1,6 +1,7 @@
 package kls.tgb.telegram.userinputhandlers;
 
-import kls.tgb.dto.sm.State;
+import kls.tgb.dto.UserDto;
+import kls.tgb.dto.sm.StartCommandState;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
@@ -12,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @AllArgsConstructor
 public class TextMessageHandlerImpl implements TextMessageHandler {
 
-    private final StateMachine stateMachine;
+    private final StateMachine<UserDto> stateMachine;
     private final UserMapper userMapper;
     private final MessageSender messageSender;
 
@@ -25,9 +26,9 @@ public class TextMessageHandlerImpl implements TextMessageHandler {
 
         final var registrationState = stateMachine.getUserState(userDto.getTelegramId());
         userDto.setState(registrationState);
-        if (State.WAITING_FOR_NAME.equals(registrationState)) {
+        if (StartCommandState.WAITING_FOR_NAME.equals(registrationState)) {
             userDto.setSelfUserName(message.getText());
-        } if (State.BLANK_PROJECT_CREATED.equals(registrationState)) {
+        } if (StartCommandState.BLANK_PROJECT_CREATED.equals(registrationState)) {
             userDto.setNewProjectName(message.getText());
         }
 

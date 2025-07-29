@@ -7,7 +7,7 @@ import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.Actions;
 import kls.tgb.dto.sm.MessageButtonHolder;
-import kls.tgb.dto.sm.State;
+import kls.tgb.dto.sm.StartCommandState;
 import kls.tgb.exception.StateMachineException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -22,7 +22,7 @@ import static kls.tgb.dto.sm.Actions.*;
 import static kls.tgb.dto.sm.Actions.DONT_SEE_PROJECT;
 import static kls.tgb.dto.sm.Actions.LETS_OPEN_PROJECT;
 import static kls.tgb.dto.sm.Actions.OPEN_EXIST_PROJECT;
-import static kls.tgb.dto.sm.State.*;
+import static kls.tgb.dto.sm.StartCommandState.*;
 import static kls.tgb.util.StringConstants.*;
 import static kls.tgb.util.StringConstants.LETS_SEE_PROJECTS;
 
@@ -34,7 +34,7 @@ class StartStateMachineService {
     private final DbService dbService;
 
     MessageButtonHolder showProjectsOrCreateNew(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        State oldState = userDto.getState();
+        StartCommandState oldState = userDto.getState();
         if (Actions.LETS_SEE_PROJECTS == userDto.getUserAction()) {
             // получаем данные о проектах или предлагаем создать новый
             List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
@@ -64,7 +64,7 @@ class StartStateMachineService {
     }
 
     MessageButtonHolder updateProjectName(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        State oldState = userDto.getState();
+        StartCommandState oldState = userDto.getState();
         StateDto stateByTgID = dbService.getStateByTgID(userTgId);
         if (null == stateByTgID.getData() || stateByTgID.getData().length == 0) {
             throw new IllegalArgumentException();
@@ -77,7 +77,7 @@ class StartStateMachineService {
     }
 
     MessageButtonHolder createNewBlankProject(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        State oldState = userDto.getState();
+        StartCommandState oldState = userDto.getState();
         if (LETS_OPEN_PROJECT == userDto.getUserAction()) {
             Long newProjectId = dbService.createNewProject(userDto);
             ObjectMapper objectMapper = new ObjectMapper();
@@ -85,7 +85,7 @@ class StartStateMachineService {
             try {
                 bytes = objectMapper.writeValueAsBytes(newProjectId);
             } catch (JsonProcessingException e) {
-                throw new StateMachineException(userDto.getChatId(), BLANK_PROJECT_CREATED, userTgId);
+                throw new StateMachineException(userDto.getChatId(), BLANK_PROJECT_CREATED.name(), userTgId);
             }
             userDto.setState(dbService.setState(userTgId, BLANK_PROJECT_CREATED, bytes));
             logUserState(userTgId, userDto, oldState);
@@ -96,12 +96,12 @@ class StartStateMachineService {
         }
     }
 
-    private static void logUserState(Long userTgId, UserDto userDto, State oldState) {
+    private static void logUserState(Long userTgId, UserDto userDto, StartCommandState oldState) {
         log.info("User {} moved to state {} from {}", userTgId, userDto.getState(), oldState);
     }
 
     MessageButtonHolder createUserWithCustomName(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        State oldState = userDto.getState();
+        StartCommandState oldState = userDto.getState();
         final var userDtoAfterSaveUpdate = dbService.getOrCreateUser(userTgId, userDto);
         if (Boolean.TRUE.equals(userDtoAfterSaveUpdate.getIsNewUser())) {
             userDto.setState(dbService.setState(userTgId, NEW_USER_REGISTERED));
@@ -115,7 +115,7 @@ class StartStateMachineService {
     }
 
     MessageButtonHolder handleInitialState(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        State oldState = userDto.getState();
+        StartCommandState oldState = userDto.getState();
         if (dbService.isUserExists(userTgId)) {
             userDto.setState(dbService.setState(userTgId, USER_EXISTS));
             logUserState(userTgId, userDto, oldState);
