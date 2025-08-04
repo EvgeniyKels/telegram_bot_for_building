@@ -11,4 +11,12 @@ public class AddExpenseStateMachineService {
     public MessageButtonHolder handleInitialState(Long userTgId, ExpenseDto dto) {
         return null;
     }
+
+    public MessageButtonHolder setExpenseName(Long userTgId, ExpenseDto dto) {
+        return null;
+    }
+
+    public MessageButtonHolder setExpenseAmount(Long userTgId, ExpenseDto dto) {
+        return null;
+    }
 }

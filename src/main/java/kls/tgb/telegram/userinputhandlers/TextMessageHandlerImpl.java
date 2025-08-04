@@ -32,7 +32,7 @@ public class TextMessageHandlerImpl implements TextMessageHandler {
             userDto.setNewProjectName(message.getText());
         }
 
-        final var userMessage = stateMachine.handleStartCommandStates(userDto.getTelegramId(), userDto);
+        final var userMessage = stateMachine.handleCommandStates(userDto.getTelegramId(), userDto);
 
         messageSender.sendMessage(String.valueOf(chatId), userMessage);
     }

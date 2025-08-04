@@ -34,7 +34,7 @@ public class CommandStartHandlerImpl implements CommandHandler {
         userDto.setChatId(message.getChatId());
         final var registrationState = stateMachine.getUserState(userDto.getTelegramId());
         userDto.setState(registrationState);
-        final var messageButtonHolder = stateMachine.handleStartCommandStates(userDto.getTelegramId(), userDto);
+        final var messageButtonHolder = stateMachine.handleCommandStates(userDto.getTelegramId(), userDto);
 
         messageSender.sendMessage(String.valueOf(userDto.getChatId()), messageButtonHolder);
     }

@@ -1,5 +1,7 @@
 package kls.tgb.dto.sm;
 
 public enum AddExpenseState {
-    A
+    CREATE_EXPENSE,
+    SET_EXPENSE_NAME,
+    SET_EXPENSE_AMOUNT
 }

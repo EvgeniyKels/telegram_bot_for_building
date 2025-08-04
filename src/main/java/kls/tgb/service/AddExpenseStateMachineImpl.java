@@ -19,13 +19,15 @@ public class AddExpenseStateMachineImpl implements StateMachine<ExpenseDto, AddE
     private final AddExpenseStateMachineService addExpenseStateMachineService;
 
     @Override
-    public MessageButtonHolder handleStartCommandStates(Long userTgId, ExpenseDto dto) {
+    public MessageButtonHolder handleCommandStates(Long userTgId, ExpenseDto dto) {
         AddExpenseState state = dto.getState();
         log.debug("User {}: handling state transition from {}", userTgId, state);
         MessageButtonHolder messageButtonHolder;
         try {
             messageButtonHolder = switch (state) {
-                case A -> addExpenseStateMachineService.handleInitialState(userTgId, dto);
+                case CREATE_EXPENSE -> addExpenseStateMachineService.handleInitialState(userTgId, dto);
+                case SET_EXPENSE_NAME -> addExpenseStateMachineService.setExpenseName(userTgId, dto);
+                case SET_EXPENSE_AMOUNT -> addExpenseStateMachineService.setExpenseAmount(userTgId, dto);
                 default -> {
                     final var errorMessage = "Unknown state: " + state;
                     log.error(errorMessage);

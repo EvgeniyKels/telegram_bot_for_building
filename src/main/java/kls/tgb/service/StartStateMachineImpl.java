@@ -19,7 +19,7 @@ public class StartStateMachineImpl implements StateMachine<UserDto, StartCommand
     private final StartStateMachineService startStateMachineService;
 
     @Override
-    public MessageButtonHolder handleStartCommandStates(@NonNull final Long userTgId, @NonNull final UserDto dto) {
+    public MessageButtonHolder handleCommandStates(@NonNull final Long userTgId, @NonNull final UserDto dto) {
         final var state = dto.getState();
         log.debug("User {}: handling state transition from {}", userTgId, state);
         MessageButtonHolder messageButtonHolder;

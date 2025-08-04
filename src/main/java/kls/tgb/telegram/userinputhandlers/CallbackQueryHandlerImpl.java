@@ -31,7 +31,7 @@ public class CallbackQueryHandlerImpl implements CallbackQueryHandler {
         userDto.setState(registrationState);
         userDto.setUserAction(Actions.valueOf(callbackQuery.getData()));
 
-        MessageButtonHolder messageButtonHolder = stateMachine.handleStartCommandStates(userDto.getTelegramId(), userDto);
+        MessageButtonHolder messageButtonHolder = stateMachine.handleCommandStates(userDto.getTelegramId(), userDto);
 
         messageSender.sendMessage(String.valueOf(userDto.getChatId()), messageButtonHolder);
 
