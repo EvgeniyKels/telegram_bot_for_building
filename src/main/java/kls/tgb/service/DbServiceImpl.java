@@ -57,13 +57,13 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public StartCommandState setState(@NonNull final Long telegramId, @NonNull final StartCommandState state) {
+    public String setState(@NonNull final Long telegramId, @NonNull final String state) {
         return setState(telegramId, state, new byte[0]);
     }
 
     @Override
     @Transactional
-    public StartCommandState setState(@NonNull final Long telegramId, @NonNull final StartCommandState state, byte[] data) {
+    public String setState(@NonNull final Long telegramId, @NonNull final String state, byte[] data) {
         Optional<StateEntity> stateRepoByTelegramId = stateRepo.findByTelegramId(telegramId);
 
         StateEntity stateEntity;
@@ -135,7 +135,7 @@ public class DbServiceImpl implements DbService {
         return stateEntityOptional.map(stateMapper::fromStateEntityToStateDto).orElseGet(() -> {
             StateDto stateDto = new StateDto();
             stateDto.setTelegramId(telegramId);
-            stateDto.setState(StartCommandState.STATE_NOT_EXISTS);
+            stateDto.setState(StartCommandState.STATE_NOT_EXISTS.name());
             return stateDto;
         });
     }

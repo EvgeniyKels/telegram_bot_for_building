@@ -1,6 +1,7 @@
 package kls.tgb.telegram.userinputhandlers.commandhandlers;
 
 import kls.tgb.dto.UserDto;
+import kls.tgb.dto.sm.StartCommandState;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
@@ -14,13 +15,13 @@ import static kls.tgb.util.StringConstants.*;
 public class CommandStartHandlerImpl implements CommandHandler {
 
     private final MessageSender messageSender;
-    private final StateMachine<UserDto> stateMachine;
+    private final StateMachine<UserDto, StartCommandState> stateMachine;
     private final UserMapper userMapper;
 
     @Value("${telegram.handler.description.start}")
     private String startHandlerDescription;
 
-    public CommandStartHandlerImpl(MessageSender messageSender, StateMachine<UserDto> stateMachine, UserMapper userMapper) {
+    public CommandStartHandlerImpl(MessageSender messageSender, StateMachine<UserDto, StartCommandState> stateMachine, UserMapper userMapper) {
         this.messageSender = messageSender;
         this.stateMachine = stateMachine;
         this.userMapper = userMapper;

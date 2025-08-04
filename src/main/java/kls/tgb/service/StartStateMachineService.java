@@ -39,13 +39,13 @@ class StartStateMachineService {
             // получаем данные о проектах или предлагаем создать новый
             List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
             if (allUserProjects.isEmpty()) {
-                userDto.setState(dbService.setState(userTgId, PROJECT_NOT_EXISTS));
+                updateStateInDbAndSetToDto(PROJECT_NOT_EXISTS, userTgId, userDto);
                 logUserState(userTgId, userDto, oldState);
                 return new MessageButtonHolder(
                         YOU_HAVE_NOT_PROJECTS,
                         Map.of(YES, LETS_OPEN_PROJECT, NO, DONT_OPEN_PROJECT));
             } else {
-                userDto.setState(dbService.setState(userTgId, PROJECT_EXISTS));
+                updateStateInDbAndSetToDto(PROJECT_EXISTS, userTgId, userDto);
                 logUserState(userTgId, userDto, oldState);
                 return getMessageButtonHolderWithAllProjects(allUserProjects);
             }
@@ -70,10 +70,15 @@ class StartStateMachineService {
             throw new IllegalArgumentException();
         }
         dbService.updateProjectName(userTgId, Long.valueOf(new String(stateByTgID.getData())), userDto);
-        userDto.setState(dbService.setState(userTgId, PROJECT_CREATED));
+        updateStateInDbAndSetToDto(PROJECT_CREATED, userTgId, userDto);
         logUserState(userTgId, userDto, oldState);
         List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
         return getMessageButtonHolderWithAllProjects(allUserProjects);
+    }
+
+    private void updateStateInDbAndSetToDto(StartCommandState state, Long userTgId, UserDto userDto) {
+        dbService.setState(userTgId, state.name());
+        userDto.setState(state);
     }
 
     MessageButtonHolder createNewBlankProject(@NonNull Long userTgId, @NonNull UserDto userDto) {
@@ -87,7 +92,7 @@ class StartStateMachineService {
             } catch (JsonProcessingException e) {
                 throw new StateMachineException(userDto.getChatId(), BLANK_PROJECT_CREATED.name(), userTgId);
             }
-            userDto.setState(dbService.setState(userTgId, BLANK_PROJECT_CREATED, bytes));
+            updateStateInDbAndSetToDto(BLANK_PROJECT_CREATED, userTgId, userDto);
             logUserState(userTgId, userDto, oldState);
             return new MessageButtonHolder(ENTER_PROJECT_NAME, null);
         } else {
@@ -104,7 +109,7 @@ class StartStateMachineService {
         StartCommandState oldState = userDto.getState();
         final var userDtoAfterSaveUpdate = dbService.getOrCreateUser(userTgId, userDto);
         if (Boolean.TRUE.equals(userDtoAfterSaveUpdate.getIsNewUser())) {
-            userDto.setState(dbService.setState(userTgId, NEW_USER_REGISTERED));
+            updateStateInDbAndSetToDto(NEW_USER_REGISTERED, userTgId, userDto);
             logUserState(userTgId, userDto, oldState);
             return new MessageButtonHolder(
                     GREETINGS.concat(userDtoAfterSaveUpdate.getSelfUserName()).concat(LETS_SEE_PROJECTS),
@@ -117,14 +122,14 @@ class StartStateMachineService {
     MessageButtonHolder handleInitialState(@NonNull Long userTgId, @NonNull UserDto userDto) {
         StartCommandState oldState = userDto.getState();
         if (dbService.isUserExists(userTgId)) {
-            userDto.setState(dbService.setState(userTgId, USER_EXISTS));
+            updateStateInDbAndSetToDto(USER_EXISTS, userTgId, userDto);
             logUserState(userTgId, userDto, oldState);
             UserDto userFromDb = dbService.getOrCreateUser(userTgId, userDto);
             return new MessageButtonHolder(
                     GREETINGS.concat(userFromDb.getSelfUserName()).concat(LETS_SEE_PROJECTS),
                     Map.of(YES, Actions.LETS_SEE_PROJECTS, NO, DONT_SEE_PROJECT));
         } else {
-            userDto.setState(dbService.setState(userTgId, WAITING_FOR_NAME));
+            updateStateInDbAndSetToDto(WAITING_FOR_NAME, userTgId, userDto);
             logUserState(userTgId, userDto, oldState);
             return new MessageButtonHolder(WHAT_IS_YOUR_NAME, null);
         }

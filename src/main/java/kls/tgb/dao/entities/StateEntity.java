@@ -2,12 +2,16 @@ package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
 import kls.tgb.dto.sm.StartCommandState;
+import lombok.Getter;
+import lombok.Setter;
 
 import static kls.tgb.util.StringConstants.STATE;
 import static kls.tgb.util.StringConstants.TELEGRAM_ID;
 
 @Entity
 @Table(name = STATE)
+@Getter
+@Setter
 public class StateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +21,7 @@ public class StateEntity {
     private Long telegramId;
 
     @Column(name = STATE, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private StartCommandState state;
+    private String state;
 
     @Lob
     @Column(length = 1000000)
@@ -26,32 +29,12 @@ public class StateEntity {
 
     public StateEntity() {}
 
-    public StateEntity(Long telegramId, StartCommandState state) {
+    public StateEntity(Long telegramId, String state) {
         this.telegramId = telegramId;
         this.state = state;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getTelegramId() {
-        return telegramId;
-    }
-
-    public StartCommandState getState() {
-        return state;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setState(StartCommandState state) {
+    public void setState(String state) {
         this.state = state;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
     }
 }

@@ -1,5 +1,6 @@
 package kls.tgb.service;
 
+import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.MessageButtonHolder;
 import kls.tgb.dto.sm.StartCommandState;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class StartStateMachineImpl implements StateMachine<UserDto> {
+public class StartStateMachineImpl implements StateMachine<UserDto, StartCommandState> {
 
     private final DbService dbService;
     private final StartStateMachineService startStateMachineService;
@@ -47,12 +48,14 @@ public class StartStateMachineImpl implements StateMachine<UserDto> {
     }
 
     @Override
-    public StartCommandState getUserState(@NonNull final Long telegramId) {
-        return dbService.getStateByTgID(telegramId).getState();
+    public StartCommandState getUserState(Long telegramId) {
+        StateDto stateByTgID = dbService.getStateByTgID(telegramId);
+        return StartCommandState.valueOf(stateByTgID.getState());
     }
 
     @Override
-    public void removeUserState(@NonNull final Long telegramId) {
+    public void removeUserState(Long telegramId) {
         dbService.removeState(telegramId);
     }
+
 }

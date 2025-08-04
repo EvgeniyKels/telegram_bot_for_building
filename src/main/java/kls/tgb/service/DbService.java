@@ -13,9 +13,9 @@ public interface DbService {
 
     StateDto getStateByTgID(@NonNull Long id);
 
-    StartCommandState setState(Long telegramId, StartCommandState state);
+    String setState(Long telegramId, String state);
 
-    StartCommandState setState(Long telegramId, StartCommandState state, byte[] data);
+    String setState(Long telegramId, String state, byte[] data);
 
     List<ConstructionProjectDto> getAllUserProjects(Long userTgId);
 

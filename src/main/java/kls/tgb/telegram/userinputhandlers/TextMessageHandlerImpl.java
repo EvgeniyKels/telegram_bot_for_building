@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @AllArgsConstructor
 public class TextMessageHandlerImpl implements TextMessageHandler {
 
-    private final StateMachine<UserDto> stateMachine;
+    private final StateMachine<UserDto, StartCommandState> stateMachine;
     private final UserMapper userMapper;
     private final MessageSender messageSender;
 

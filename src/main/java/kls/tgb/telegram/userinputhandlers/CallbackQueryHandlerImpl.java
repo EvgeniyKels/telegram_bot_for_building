@@ -3,6 +3,7 @@ package kls.tgb.telegram.userinputhandlers;
 import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.Actions;
 import kls.tgb.dto.sm.MessageButtonHolder;
+import kls.tgb.dto.sm.StartCommandState;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
@@ -14,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @AllArgsConstructor
 public class CallbackQueryHandlerImpl implements CallbackQueryHandler {
 
-    private final StateMachine<UserDto> stateMachine;
+    private final StateMachine<UserDto, StartCommandState> stateMachine;
     private final MessageSender messageSender;
     private final UserMapper userMapper;
 
