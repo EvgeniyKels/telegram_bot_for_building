@@ -57,12 +57,6 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public String setState(@NonNull final Long telegramId, @NonNull final String state) {
-        return setState(telegramId, state, new byte[0]);
-    }
-
-    @Override
-    @Transactional
     public String setState(@NonNull final Long telegramId, @NonNull final String state, byte[] data) {
         Optional<StateEntity> stateRepoByTelegramId = stateRepo.findByTelegramId(telegramId);
 

@@ -13,8 +13,6 @@ public interface DbService {
 
     StateDto getStateByTgID(@NonNull Long id);
 
-    String setState(Long telegramId, String state);
-
     String setState(Long telegramId, String state, byte[] data);
 
     List<ConstructionProjectDto> getAllUserProjects(Long userTgId);

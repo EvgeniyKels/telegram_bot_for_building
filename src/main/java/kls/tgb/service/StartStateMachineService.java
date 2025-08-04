@@ -65,11 +65,8 @@ class StartStateMachineService {
 
     MessageButtonHolder updateProjectName(@NonNull Long userTgId, @NonNull UserDto userDto) {
         StartCommandState oldState = userDto.getState();
-        StateDto stateByTgID = dbService.getStateByTgID(userTgId);
-        if (null == stateByTgID.getData() || stateByTgID.getData().length == 0) {
-            throw new IllegalArgumentException();
-        }
-        dbService.updateProjectName(userTgId, Long.valueOf(new String(stateByTgID.getData())), userDto);
+        StateDto state = dbService.getStateByTgID(userTgId);
+        dbService.updateProjectName(userTgId, Long.valueOf(new String(state.getData())), userDto);
         updateStateInDbAndSetToDto(PROJECT_CREATED, userTgId, userDto);
         logUserState(userTgId, userDto, oldState);
         List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
@@ -77,7 +74,13 @@ class StartStateMachineService {
     }
 
     private void updateStateInDbAndSetToDto(StartCommandState state, Long userTgId, UserDto userDto) {
-        dbService.setState(userTgId, state.name());
+        dbService.setState(userTgId, state.name(), new byte[0]);
+        userDto.setState(state);
+    }
+
+
+    private void updateStateInDbAndSetToDto(StartCommandState state, Long userTgId, UserDto userDto, byte[] bytes) {
+        dbService.setState(userTgId, state.name(), bytes);
         userDto.setState(state);
     }
 
@@ -92,7 +95,7 @@ class StartStateMachineService {
             } catch (JsonProcessingException e) {
                 throw new StateMachineException(userDto.getChatId(), BLANK_PROJECT_CREATED.name(), userTgId);
             }
-            updateStateInDbAndSetToDto(BLANK_PROJECT_CREATED, userTgId, userDto);
+            updateStateInDbAndSetToDto(BLANK_PROJECT_CREATED, userTgId, userDto, bytes);
             logUserState(userTgId, userDto, oldState);
             return new MessageButtonHolder(ENTER_PROJECT_NAME, null);
         } else {
