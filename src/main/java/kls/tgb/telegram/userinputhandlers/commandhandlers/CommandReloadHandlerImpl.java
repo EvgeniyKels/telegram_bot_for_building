@@ -3,7 +3,6 @@ package kls.tgb.telegram.userinputhandlers.commandhandlers;
 import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.StartCommandState;
 import kls.tgb.mapper.UserMapper;
-import kls.tgb.service.StartStateMachineImpl;
 import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,7 @@ import static kls.tgb.util.StringConstants.*;
 public class CommandReloadHandlerImpl implements CommandHandler{
 
     @Value("${telegram.handler.description.remove}")
-    private String startHandlerDescription;
+    private String reloadHandlerDescription;
 
     private final StateMachine<UserDto, StartCommandState> stateMachine;
     private final MessageSender messageSender;
@@ -45,6 +44,6 @@ public class CommandReloadHandlerImpl implements CommandHandler{
 
     @Override
     public String getHandlerDescription() {
-        return startHandlerDescription;
+        return reloadHandlerDescription;
     }
 }

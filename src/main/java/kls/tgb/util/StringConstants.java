@@ -30,6 +30,7 @@ public final class StringConstants {
     public static final String SLASH = "/";
     public static final String START = "start";
     public static final String REMOVE = "remove";
+    public static final String ADD_EXPENSE = "add_expense";
 
     public static final String YOU_HAVE_NOT_PROJECTS = "У вас нет проектов. Хотите создать новый ?";
     public static final String YES = "Да";

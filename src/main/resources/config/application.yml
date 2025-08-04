@@ -26,6 +26,7 @@ telegram:
     description:
       start: приветствие, создание / изменение пользователя
       remove: обнуляет состояние проектов
+      add_expense: добавляет расход
 
 logging:
   level:
