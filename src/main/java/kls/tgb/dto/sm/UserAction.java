@@ -3,7 +3,7 @@ package kls.tgb.dto.sm;
 import lombok.Getter;
 
 @Getter
-public enum Actions {
+public enum UserAction {
 
     LETS_SEE_PROJECTS("lets_see_projects"),
     DONT_SEE_PROJECT("dont_see_projects"),
@@ -13,5 +13,5 @@ public enum Actions {
 
     OPEN_EXIST_PROJECT("open_exist_project");
 
-    Actions(String letsOpenProjects) {}
+    UserAction(String userAction) {}
 }

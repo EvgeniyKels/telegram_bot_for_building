@@ -1,12 +1,15 @@
 package kls.tgb.service;
 
 import kls.tgb.dao.entities.ConstructionProjectEntity;
+import kls.tgb.dao.entities.ExpenseEntity;
 import kls.tgb.dao.entities.StateEntity;
 import kls.tgb.dao.entities.UserEntity;
 import kls.tgb.dao.repo.ConstructionProjectRepo;
+import kls.tgb.dao.repo.ExpenseRepo;
 import kls.tgb.dao.repo.StateRepo;
 import kls.tgb.dao.repo.UserRepo;
 import kls.tgb.dto.ConstructionProjectDto;
+import kls.tgb.dto.ExpenseDto;
 import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
 import kls.tgb.dto.sm.StartCommandState;
@@ -26,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static kls.tgb.util.SerializeUtil.convertObjectToByteArray;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -37,10 +42,11 @@ public class DbServiceImpl implements DbService {
     private final UserMapper userMapper;
     private final ConstructionProjectMapper projectMapper;
     private final ConstructionProjectRepo constructionProjectRepo;
+    private final ExpenseRepo expenseRepo;
 
     @Override
     @Transactional
-    public UserDto getOrCreateUser(@NonNull final Long telegramId, @NonNull final UserDto userDto) {
+    public UserDto getOrCreateUser(@NonNull final Long telegramId, @NonNull final String tgUserName, final String selfUserName) { //TODO азнести на два метода
         return userRepo.findByTelegramId(telegramId).map(x -> {
             log.debug("User already exists with telegram id {}", telegramId);
             UserDto userDtoFromDb = userMapper.fromUserEntityToUserDto(x);
@@ -48,7 +54,7 @@ public class DbServiceImpl implements DbService {
             return userDtoFromDb;
         }).orElseGet(() -> {
             log.debug("User does not exist with telegram id {}", telegramId);
-            UserDto userDtoFromDb = userMapper.fromUserEntityToUserDto(saveUser(userDto));
+            UserDto userDtoFromDb = userMapper.fromUserEntityToUserDto(saveUser(telegramId, tgUserName, selfUserName));
             userDtoFromDb.setIsNewUser(Boolean.TRUE);
             return userDtoFromDb;
         });
@@ -116,10 +122,37 @@ public class DbServiceImpl implements DbService {
 
     @Override
     @Transactional
-    public void updateProjectName(@NonNull final Long userTgId, @NonNull final Long projectId, @NonNull final UserDto userDto) {
+    public void updateProjectName(@NonNull final Long projectId, @NonNull final UserDto userDto) {
         ConstructionProjectEntity constructionProjectEntity = constructionProjectRepo.findById(projectId).orElseThrow();
-        constructionProjectEntity.setName(userDto.getNewProjectName());
-        constructionProjectRepo.save(constructionProjectEntity);
+        constructionProjectEntity.setName(userDto.getActiveProjectName());
+        ConstructionProjectEntity projectEntity = constructionProjectRepo.save(constructionProjectEntity);
+        userDto.setActiveProjectId(projectEntity.getId());
+    }
+
+    @Transactional
+    public void updateExpenseDescription(@NonNull final Long expenseId, @NonNull final String description) {
+        ExpenseEntity expenseEntity = expenseRepo.findById(expenseId).orElseThrow();
+        expenseEntity.setDescription(description);
+    }
+
+    @Override
+    public void updateExpenseAmount(Long expenseId, Long amount) {
+        ExpenseEntity expenseEntity = expenseRepo.findById(expenseId).orElseThrow();
+        expenseEntity.setAmount(BigDecimal.valueOf(amount));
+    }
+
+    @Override
+    @Transactional
+    public ExpenseDto createNewExpense(ExpenseDto dto) {
+        ExpenseEntity expenseEntity = new ExpenseEntity();
+        UserEntity userEntity = userRepo.findByTelegramId(dto.getTelegramId()).orElseThrow();
+        ConstructionProjectEntity constructionProjectEntity = constructionProjectRepo.findById(dto.getActiveProjectId()).orElseThrow();
+        expenseEntity.setUser(userEntity);
+        expenseEntity.setProject(constructionProjectEntity);
+        ExpenseEntity savedExpenseEntity = expenseRepo.save(expenseEntity);
+        userRepo.save(userEntity);
+        dto.setId(savedExpenseEntity.getId());
+        return dto;
     }
 
     @Override
@@ -130,14 +163,17 @@ public class DbServiceImpl implements DbService {
             StateDto stateDto = new StateDto();
             stateDto.setTelegramId(telegramId);
             stateDto.setState(StartCommandState.STATE_NOT_EXISTS.name());
+            UserDto userDto = new UserDto();
+            userDto.setTelegramId(telegramId);
+            stateDto.setData(convertObjectToByteArray(telegramId, userDto));
             return stateDto;
         });
     }
 
 
-    private UserEntity saveUser(final UserDto userDto) {
+    private UserEntity saveUser(final Long tgId, final String userName, final String selfUserName) {
         final var userEntity = new UserEntity(
-                userDto.getTelegramId(), userDto.getUsername(), userDto.getSelfUserName(), LocalDateTime.now());
+                tgId, userName, selfUserName, LocalDateTime.now());
 
         return userRepo.save(userEntity);
     }

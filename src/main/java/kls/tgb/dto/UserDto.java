@@ -1,7 +1,7 @@
 package kls.tgb.dto;
 
 import kls.tgb.dao.entities.Role;
-import kls.tgb.dto.sm.Actions;
+import kls.tgb.dto.sm.UserAction;
 import kls.tgb.dto.sm.StartCommandState;
 import lombok.Data;
 
@@ -18,8 +18,10 @@ public class UserDto {
     private List<ConstructionProjectDto> projects;
     private StartCommandState state;
     private String selfUserName;
-    private String newProjectName;
-    private Actions userAction;
+    private String activeProjectName;
+    private UserAction userAction;
     private Boolean isNewUser;
     private Long chatId;
+    private Long activeProjectId;
 }
+//TODO лишние поля

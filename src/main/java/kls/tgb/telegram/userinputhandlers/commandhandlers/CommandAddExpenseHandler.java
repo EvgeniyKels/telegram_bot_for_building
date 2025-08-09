@@ -1,10 +1,13 @@
 package kls.tgb.telegram.userinputhandlers.commandhandlers;
 
 import kls.tgb.dto.ExpenseDto;
+import kls.tgb.dto.TgUserChatDto;
 import kls.tgb.dto.sm.AddExpenseState;
+import kls.tgb.mapper.ExpenseMapper;
 import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,26 +21,26 @@ public class CommandAddExpenseHandler implements CommandHandler{
     private String addExpenseHandlerDescription;
 
     private final MessageSender messageSender;
-    private final StateMachine<ExpenseDto, AddExpenseState> stateMachine;
-    private final ExpenseMapper expenseMapper;
+    private final StateMachine stateMachine;
 
-    public CommandAddExpenseHandler(MessageSender messageSender, StateMachine<ExpenseDto, AddExpenseState> stateMachine, ExpenseMapper expenseMapper) {
+    public CommandAddExpenseHandler(MessageSender messageSender, @Qualifier(EXPENSE_COMMAND_SM) StateMachine stateMachine, ExpenseMapper expenseMapper) {
         this.messageSender = messageSender;
         this.stateMachine = stateMachine;
-        this.expenseMapper = expenseMapper;
     }
 
     @Override
-    public void handle(Message message) {
+    public void handle(Message message) { //TODO свести все в общий класс
         final var telegramUser = message.getFrom();
-        final var expenseDto = expenseMapper.fromTgUserToUserDto(telegramUser);
-        expenseDto.setChatId(message.getChatId());
-        final var expenseState = stateMachine.getUserState(expenseDto.getTelegramId());
-        expenseDto.setState(expenseState);
-        final var messageButtonHolder = stateMachine.handleCommandStates(expenseDto.getTelegramId(), expenseDto);
-        stateMachine.handleCommandStates(expenseDto.getTelegramId(), expenseDto);
+        final var tgUserChatDto = new TgUserChatDto(
+                telegramUser.getId(),
+                message.getChatId(),
+                telegramUser.getUserName(),
+                null,
+                null
+        );
+        final var messageButtonHolder = stateMachine.handleCommandStates(tgUserChatDto);
 
-        messageSender.sendMessage(String.valueOf(expenseDto.getTelegramId()), messageButtonHolder);
+        messageSender.sendMessage(String.valueOf(tgUserChatDto.chatID()), messageButtonHolder);
     }
 
     @Override

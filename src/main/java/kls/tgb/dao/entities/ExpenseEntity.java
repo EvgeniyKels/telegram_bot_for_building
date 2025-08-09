@@ -21,7 +21,7 @@ public class ExpenseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = true, precision = 12, scale = 2)
     private BigDecimal amount;
 
     @Column(length = 1000)
@@ -33,11 +33,11 @@ public class ExpenseEntity {
     private ConstructionProjectEntity project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = CATEGORY_ID, nullable = false)
+    @JoinColumn(name = CATEGORY_ID) /*nullable = false*///TODO)
     private ExpenseCategoryEntity category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
-    private UserEntity createdBy;
+    private UserEntity user;
 
 }

@@ -11,39 +11,39 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import static kls.tgb.util.StringConstants.*;
 
-@Component
-public class CommandReloadHandlerImpl implements CommandHandler{
-
-    @Value("${telegram.handler.description.remove}")
-    private String reloadHandlerDescription;
-
-    private final StateMachine<UserDto, StartCommandState> stateMachine;
-    private final MessageSender messageSender;
-    private final UserMapper userMapper;
-
-    public CommandReloadHandlerImpl(StateMachine<UserDto, StartCommandState> stateMachine, MessageSender messageSender, UserMapper userMapper) {
-        this.stateMachine = stateMachine;
-        this.messageSender = messageSender;
-        this.userMapper = userMapper;
-    }
-
-    @Override
-    public void handle(Message message) {
-        final var telegramUser = message.getFrom();
-        final var userDto = userMapper.fromTgUserToUserDto(telegramUser);
-        final var chatId = message.getChatId();
-        userDto.setChatId(chatId);
-        stateMachine.removeUserState(userDto.getTelegramId());
-        messageSender.sendMessage(String.valueOf(userDto.getChatId()), "удалено");
-    }
-
-    @Override
-    public String getHandlerName() {
-        return SLASH.concat(REMOVE);
-    }
-
-    @Override
-    public String getHandlerDescription() {
-        return reloadHandlerDescription;
-    }
-}
+//@Component
+//public class CommandReloadHandlerImpl implements CommandHandler{
+//
+//    @Value("${telegram.handler.description.remove}")
+//    private String reloadHandlerDescription;
+//
+//    private final StateMachine stateMachine;
+//    private final MessageSender messageSender;
+//    private final UserMapper userMapper;
+//
+//    public CommandReloadHandlerImpl(StateMachine stateMachine, MessageSender messageSender, UserMapper userMapper) {
+//        this.stateMachine = stateMachine;
+//        this.messageSender = messageSender;
+//        this.userMapper = userMapper;
+//    }
+//
+//    @Override
+//    public void handle(Message message) {
+//        final var telegramUser = message.getFrom(); //TODO
+////        final var userDto = userMapper.fromTgUserToUserDto(telegramUser);
+////        final var chatId = message.getChatId();
+////        userDto.setChatId(chatId);
+////        stateMachine.removeUserState(userDto.getTelegramId());
+////        messageSender.sendMessage(String.valueOf(userDto.getChatId()), "удалено");
+//    }
+//
+//    @Override
+//    public String getHandlerName() {
+//        return SLASH.concat(REMOVE);
+//    }
+//
+//    @Override
+//    public String getHandlerDescription() {
+//        return reloadHandlerDescription;
+//    }
+//}

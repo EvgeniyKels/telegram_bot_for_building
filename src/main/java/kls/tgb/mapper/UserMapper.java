@@ -11,10 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.User;
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
-    @Mapping(target = "telegramId", source = "id")
-    @Mapping(target = "username", source = "userName")
-    public abstract UserDto fromTgUserToUserDto(User telegramUser);
-
     @Mapping(target = "selfUserName", source = "selfUserName")
     public abstract UserDto fromUserEntityToUserDto(UserEntity userEntity);
 

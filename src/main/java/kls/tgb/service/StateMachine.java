@@ -1,12 +1,10 @@
 package kls.tgb.service;
 
+import kls.tgb.dto.TgUserChatDto;
 import kls.tgb.dto.sm.MessageButtonHolder;
 
-public interface StateMachine <T, S> {
+public interface StateMachine {
 
-    MessageButtonHolder handleCommandStates(Long userTgId, T dto);
+    MessageButtonHolder handleCommandStates(TgUserChatDto dto);
 
-    S getUserState(Long telegramId);
-
-    void removeUserState(Long telegramId);
 }

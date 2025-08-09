@@ -4,6 +4,6 @@ import java.util.Map;
 
 public record MessageButtonHolder (
         String message,
-        Map<String, Actions> buttons
+        Map<String, UserAction> buttons
 ) {
 }

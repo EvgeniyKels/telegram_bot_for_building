@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 public class ExpenseDto {
-    private final long id;
-    private final Long chatId;
-    private final AddExpenseState state;
+    private Long id;
+    private Long telegramId;
+    private AddExpenseState state;
+    private Long activeProjectId;
+
 }

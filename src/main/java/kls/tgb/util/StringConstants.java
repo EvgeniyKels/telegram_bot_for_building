@@ -32,6 +32,7 @@ public final class StringConstants {
     public static final String REMOVE = "remove";
     public static final String ADD_EXPENSE = "add_expense";
 
+    // сообщения клиенту
     public static final String YOU_HAVE_NOT_PROJECTS = "У вас нет проектов. Хотите создать новый ?";
     public static final String YES = "Да";
     public static final String NO = "Нет";
@@ -41,10 +42,18 @@ public final class StringConstants {
     public static final String GREETINGS = "привет, ";
     public static final String LETS_SEE_PROJECTS = "  Перейдем к проектам ?";
     public static final String WHAT_IS_YOUR_NAME = "приветик, как тебя звать ?";
-    public static final String INPUT_EXCHANGES = "поздравляшки. Теперь можно вносить расходы";
+    public static final String ENTER_EXPENSE_NAME = "введите название расхода";
+    public static final String ENTER_EXPENSE_AMOUNT = "введите величину расхода";
 
     // сообщения об ошибках
     public static final String CANT_FIND_COMMAND_HANDLER = "не найден обработчик команды";
     public static final String CHANGE_NAME_RESTRICTION = "пользователь не может менять имя после регистрации";
+
+    // имена бинов
+    public static final String EXPENSE_COMMAND_SM = "E_SM";
+    public static final String START_COMMAND_SM = "S_SM";
+    public static final String EXPENSE_COMMAND_SERVICE = "ECS";
+    public static final String START_COMMAND_SERVICE = "SCS";
+
 
 }

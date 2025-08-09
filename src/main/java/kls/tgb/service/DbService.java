@@ -1,15 +1,15 @@
 package kls.tgb.service;
 
 import kls.tgb.dto.ConstructionProjectDto;
+import kls.tgb.dto.ExpenseDto;
 import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
-import kls.tgb.dto.sm.StartCommandState;
 import lombok.NonNull;
 
 import java.util.List;
 
 public interface DbService {
-    UserDto getOrCreateUser(final Long telegramId, UserDto selfUserName);
+    UserDto getOrCreateUser(final Long telegramId, @NonNull String userName, String selfUserName);
 
     StateDto getStateByTgID(@NonNull Long id);
 
@@ -23,5 +23,11 @@ public interface DbService {
 
     Long createNewProject(UserDto userDto);
 
-    void updateProjectName(Long userTgId, Long projectId, UserDto userDto);
+    void updateProjectName(@NonNull final Long projectId, @NonNull final UserDto userDto);
+
+    ExpenseDto createNewExpense(ExpenseDto dto);
+
+    void updateExpenseDescription(@NonNull final Long expenseId, @NonNull final String description);
+
+    void updateExpenseAmount(Long expenseId, Long amount);
 }

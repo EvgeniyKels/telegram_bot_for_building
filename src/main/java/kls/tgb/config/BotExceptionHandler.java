@@ -15,22 +15,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @AllArgsConstructor
 public class BotExceptionHandler {
 
+    private final String USER_MESSAGE = "Произошла ошибка. Попробуйте позже.";
     private final MessageSender messageSender;
 
     @ExceptionHandler(CommandHandlerException.class)
     public void handleCommandHandlerException(CommandHandlerException ex) {
-        messageSender.sendMessage(ex.getChatId().toString(), "Произошла ошибка. Попробуйте позже.");
+        log.error("CommandHandlerException", ex);
+        messageSender.sendMessage(ex.getChatId().toString(), USER_MESSAGE);
     }
 
     @ExceptionHandler(MessageSenderException.class)
     public void handleMessageSenderException(MessageSenderException ex) {
-        messageSender.sendMessage(ex.getChatId().toString(), "Произошла ошибка. Попробуйте позже.");
+        log.error("MessageSenderException", ex);
+        messageSender.sendMessage(ex.getChatId().toString(), USER_MESSAGE);
     }
 
     @ExceptionHandler(StateMachineException.class)
     public void handleException(StateMachineException ex) {
         log.error("State machine failed for user {} at state {}", ex.getUserId(), ex.getFailedState());
-        messageSender.sendMessage(String.valueOf(ex.getChatId()), "Произошла ошибка. Попробуйте позже.");
+        messageSender.sendMessage(String.valueOf(ex.getChatId()), USER_MESSAGE);
     }
 
 }

@@ -1,41 +1,47 @@
 package kls.tgb.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kls.tgb.dto.ConstructionProjectDto;
 import kls.tgb.dto.StateDto;
 import kls.tgb.dto.UserDto;
-import kls.tgb.dto.sm.Actions;
+import kls.tgb.dto.sm.UserAction;
 import kls.tgb.dto.sm.MessageButtonHolder;
 import kls.tgb.dto.sm.StartCommandState;
-import kls.tgb.exception.StateMachineException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static kls.tgb.dto.sm.Actions.*;
-import static kls.tgb.dto.sm.Actions.DONT_SEE_PROJECT;
-import static kls.tgb.dto.sm.Actions.LETS_OPEN_PROJECT;
-import static kls.tgb.dto.sm.Actions.OPEN_EXIST_PROJECT;
+import static kls.tgb.dto.sm.UserAction.*;
+import static kls.tgb.dto.sm.UserAction.DONT_SEE_PROJECT;
+import static kls.tgb.dto.sm.UserAction.LETS_OPEN_PROJECT;
+import static kls.tgb.dto.sm.UserAction.OPEN_EXIST_PROJECT;
 import static kls.tgb.dto.sm.StartCommandState.*;
+import static kls.tgb.util.SerializeUtil.convertByteArrayToObject;
+import static kls.tgb.util.SerializeUtil.convertObjectToByteArray;
 import static kls.tgb.util.StringConstants.*;
 import static kls.tgb.util.StringConstants.LETS_SEE_PROJECTS;
 
 @Slf4j
 @Component
 @AllArgsConstructor
+@Qualifier(START_COMMAND_SERVICE)
 class StartStateMachineService {
 
     private final DbService dbService;
+    private final ObjectMapper objectMapper;
 
-    MessageButtonHolder showProjectsOrCreateNew(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        StartCommandState oldState = userDto.getState();
-        if (Actions.LETS_SEE_PROJECTS == userDto.getUserAction()) {
+    MessageButtonHolder showProjectsOrCreateNew(StateDto stateByTgID, UserAction action) {
+        StartCommandState oldState = StartCommandState.valueOf(stateByTgID.getState());
+        UserDto userDto = convertByteArrayToObject(stateByTgID.getData(), UserDto.class);
+        final var userTgId = stateByTgID.getTelegramId();
+        if (UserAction.LETS_SEE_PROJECTS == action) {
             // получаем данные о проектах или предлагаем создать новый
             List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
             if (allUserProjects.isEmpty()) {
@@ -63,43 +69,36 @@ class StartStateMachineService {
                 allUserProjects.stream().map(ConstructionProjectDto::name).collect(Collectors.toMap(s -> s, s -> OPEN_EXIST_PROJECT)));
     }
 
-    MessageButtonHolder updateProjectName(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        StartCommandState oldState = userDto.getState();
-        StateDto state = dbService.getStateByTgID(userTgId);
-        dbService.updateProjectName(userTgId, Long.valueOf(new String(state.getData())), userDto);
-        updateStateInDbAndSetToDto(PROJECT_CREATED, userTgId, userDto);
-        logUserState(userTgId, userDto, oldState);
-        List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userTgId);
+    MessageButtonHolder updateProjectName(StateDto stateByTgID, String projectName) {
+        StartCommandState oldState = StartCommandState.valueOf(stateByTgID.getState());
+        UserDto userDto = convertByteArrayToObject(stateByTgID.getData(), UserDto.class);
+        userDto.setActiveProjectName(projectName);
+        dbService.updateProjectName(userDto.getActiveProjectId(), userDto);
+        userDto.setActiveProjectId(userDto.getActiveProjectId());
+        updateStateInDbAndSetToDto(PROJECT_CREATED, userDto.getTelegramId(), userDto);
+        logUserState(userDto.getTelegramId(), userDto, oldState);
+        List<ConstructionProjectDto> allUserProjects = dbService.getAllUserProjects(userDto.getTelegramId());
         return getMessageButtonHolderWithAllProjects(allUserProjects);
     }
 
+
     private void updateStateInDbAndSetToDto(StartCommandState state, Long userTgId, UserDto userDto) {
-        dbService.setState(userTgId, state.name(), new byte[0]);
         userDto.setState(state);
+        dbService.setState(userTgId, state.name(), convertObjectToByteArray(userTgId, userDto));
     }
 
-
-    private void updateStateInDbAndSetToDto(StartCommandState state, Long userTgId, UserDto userDto, byte[] bytes) {
-        dbService.setState(userTgId, state.name(), bytes);
-        userDto.setState(state);
-    }
-
-    MessageButtonHolder createNewBlankProject(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        StartCommandState oldState = userDto.getState();
+    MessageButtonHolder createNewBlankProject(StateDto stateByTgID, UserAction action) {
+        StartCommandState oldState = StartCommandState.valueOf(stateByTgID.getState());
+        UserDto userDto = convertByteArrayToObject(stateByTgID.getData(), UserDto.class);
+        userDto.setUserAction(action);
         if (LETS_OPEN_PROJECT == userDto.getUserAction()) {
             Long newProjectId = dbService.createNewProject(userDto);
-            ObjectMapper objectMapper = new ObjectMapper();
-            byte[] bytes;
-            try {
-                bytes = objectMapper.writeValueAsBytes(newProjectId);
-            } catch (JsonProcessingException e) {
-                throw new StateMachineException(userDto.getChatId(), BLANK_PROJECT_CREATED.name(), userTgId);
-            }
-            updateStateInDbAndSetToDto(BLANK_PROJECT_CREATED, userTgId, userDto, bytes);
-            logUserState(userTgId, userDto, oldState);
+            userDto.setActiveProjectId(newProjectId);
+            updateStateInDbAndSetToDto(BLANK_PROJECT_CREATED, stateByTgID.getTelegramId(), userDto);
+            logUserState(stateByTgID.getTelegramId(), userDto, oldState);
             return new MessageButtonHolder(ENTER_PROJECT_NAME, null);
         } else {
-            dbService.removeState(userTgId);
+            dbService.removeState(stateByTgID.getTelegramId());
             return new MessageButtonHolder(BYE_MESSAGE, null);
         }
     }
@@ -108,29 +107,35 @@ class StartStateMachineService {
         log.info("User {} moved to state {} from {}", userTgId, userDto.getState(), oldState);
     }
 
-    MessageButtonHolder createUserWithCustomName(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        StartCommandState oldState = userDto.getState();
-        final var userDtoAfterSaveUpdate = dbService.getOrCreateUser(userTgId, userDto);
+    MessageButtonHolder createUserWithCustomName(@NonNull StateDto stateDto, @NonNull String userName, @NonNull String userInput) {
+        StartCommandState oldState = StartCommandState.valueOf(stateDto.getState());
+        final var userDtoAfterSaveUpdate = dbService.getOrCreateUser(stateDto.getTelegramId(), userName, userInput);
+        UserDto userDto = convertByteArrayToObject(stateDto.getData(), UserDto.class);
+        userDto.setUsername(userName);
+        userDto.setSelfUserName(userInput);
         if (Boolean.TRUE.equals(userDtoAfterSaveUpdate.getIsNewUser())) {
-            updateStateInDbAndSetToDto(NEW_USER_REGISTERED, userTgId, userDto);
-            logUserState(userTgId, userDto, oldState);
+            updateStateInDbAndSetToDto(NEW_USER_REGISTERED, stateDto.getTelegramId(), userDto);
+            logUserState(stateDto.getTelegramId(), userDto, oldState);
             return new MessageButtonHolder(
                     GREETINGS.concat(userDtoAfterSaveUpdate.getSelfUserName()).concat(LETS_SEE_PROJECTS),
-                    Map.of(YES, Actions.LETS_SEE_PROJECTS, NO, DONT_SEE_PROJECT));
+                    Map.of(YES, UserAction.LETS_SEE_PROJECTS, NO, DONT_SEE_PROJECT));
         } else {
             throw new IllegalStateException(CHANGE_NAME_RESTRICTION);
         }
     }
 
-    MessageButtonHolder handleInitialState(@NonNull Long userTgId, @NonNull UserDto userDto) {
-        StartCommandState oldState = userDto.getState();
+    MessageButtonHolder handleInitialState(@NonNull StateDto stateDto, @NonNull String userName) {
+        byte[] data = stateDto.getData();
+        final var userDto = convertByteArrayToObject(data, UserDto.class);
+        final var oldState = userDto.getState();
+        final var userTgId = userDto.getTelegramId();
         if (dbService.isUserExists(userTgId)) {
             updateStateInDbAndSetToDto(USER_EXISTS, userTgId, userDto);
             logUserState(userTgId, userDto, oldState);
-            UserDto userFromDb = dbService.getOrCreateUser(userTgId, userDto);
+            UserDto userFromDb = dbService.getOrCreateUser(userTgId, userName, null);
             return new MessageButtonHolder(
                     GREETINGS.concat(userFromDb.getSelfUserName()).concat(LETS_SEE_PROJECTS),
-                    Map.of(YES, Actions.LETS_SEE_PROJECTS, NO, DONT_SEE_PROJECT));
+                    Map.of(YES, UserAction.LETS_SEE_PROJECTS, NO, DONT_SEE_PROJECT));
         } else {
             updateStateInDbAndSetToDto(WAITING_FOR_NAME, userTgId, userDto);
             logUserState(userTgId, userDto, oldState);
@@ -138,7 +143,14 @@ class StartStateMachineService {
         }
     }
 
-    MessageButtonHolder handleFinalStartStatus() {
-        return new MessageButtonHolder(INPUT_EXCHANGES, null);
+    MessageButtonHolder handleFinalStartStatus(@NonNull StateDto stateByTgID) throws IOException {
+        StartCommandState oldState = StartCommandState.valueOf(stateByTgID.getState());
+        UserDto userDto = convertByteArrayToObject(stateByTgID.getData(), UserDto.class);
+        updateStateInDbAndSetToDto(START_COMMAND_FINISHED, userDto.getTelegramId(), userDto);
+        logUserState(userDto.getTelegramId(), userDto, oldState);
+        return new MessageButtonHolder(
+                userDto.getUsername() + ", ты выбрал проект " +
+                        userDto.getActiveProjectName() +
+                        ". Для ввода расходов по проекту используй команду /" + ADD_EXPENSE, null);
     }
 }
