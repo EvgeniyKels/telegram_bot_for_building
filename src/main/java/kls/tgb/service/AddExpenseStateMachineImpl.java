@@ -44,7 +44,7 @@ public class AddExpenseStateMachineImpl implements StateMachine {
             messageButtonHolder = switch (state) {
                 case CREATE_EXPENSE -> addExpenseStateMachineService.handleInitialState(stateByTgID);
                 case SET_EXPENSE_NAME -> addExpenseStateMachineService.setExpenseName(stateByTgID, dto.userInput());
-                case SET_EXPENSE_AMOUNT -> addExpenseStateMachineService.setExpenseAmount(stateByTgID, Long.parseLong(dto.userInput()));
+                case SET_EXPENSE_AMOUNT -> addExpenseStateMachineService.setExpenseAmount(stateByTgID, dto.userInput());
                 default -> {
                     final var errorMessage = "Unknown state: " + state;
                     log.error(errorMessage);

@@ -1,7 +1,6 @@
 package kls.tgb.dao.entities;
 
 import jakarta.persistence.*;
-import kls.tgb.dto.sm.StartCommandState;
 import lombok.Getter;
 import lombok.Setter;
 

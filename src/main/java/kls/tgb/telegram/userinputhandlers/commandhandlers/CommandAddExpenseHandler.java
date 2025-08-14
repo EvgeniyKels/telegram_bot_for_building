@@ -1,10 +1,7 @@
 package kls.tgb.telegram.userinputhandlers.commandhandlers;
 
-import kls.tgb.dto.ExpenseDto;
 import kls.tgb.dto.TgUserChatDto;
-import kls.tgb.dto.sm.AddExpenseState;
 import kls.tgb.mapper.ExpenseMapper;
-import kls.tgb.mapper.UserMapper;
 import kls.tgb.service.StateMachine;
 import kls.tgb.telegram.MessageSender;
 import org.springframework.beans.factory.annotation.Qualifier;

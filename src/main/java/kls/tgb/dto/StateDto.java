@@ -1,6 +1,5 @@
 package kls.tgb.dto;
 
-import kls.tgb.dto.sm.StartCommandState;
 import lombok.Data;
 
 @Data

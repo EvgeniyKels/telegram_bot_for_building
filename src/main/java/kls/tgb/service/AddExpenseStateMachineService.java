@@ -40,7 +40,7 @@ public class AddExpenseStateMachineService {
 
     private void updateStateInDbAndSetToDto(AddExpenseState state, Long userTgId, ExpenseDto expenseDto) {
         expenseDto.setState(state);
-        dbService.setState(userTgId, state.name(), convertObjectToByteArray(userTgId, expenseDto));
+        dbService.setState(userTgId, state.name(), convertObjectToByteArray(expenseDto));
     }
 
     public MessageButtonHolder setExpenseName(StateDto stateByTgID, String expenseDescription) {
@@ -50,10 +50,10 @@ public class AddExpenseStateMachineService {
         return new MessageButtonHolder(ENTER_EXPENSE_AMOUNT, null);
     }
 
-    public MessageButtonHolder setExpenseAmount(StateDto stateByTgID, Long expenseAmount) {
+    public MessageButtonHolder setExpenseAmount(StateDto stateByTgID, String expenseAmount) {
         ExpenseDto expenseDto = SerializeUtil.convertByteArrayToObject(stateByTgID.getData(), ExpenseDto.class);
-        dbService.updateExpenseAmount(expenseDto.getId(), expenseAmount);
+        String expenseName = dbService.updateExpenseAmount(expenseDto.getId(), Long.parseLong(expenseAmount.replaceAll("[^\\d-]|-(?=\\D)", "")));
         updateStateInDbAndSetToDto(SET_EXPENSE_AMOUNT, stateByTgID.getTelegramId(), expenseDto); //TODO
-        return new MessageButtonHolder("расход " + expenseAmount + " внесен", null);
+        return new MessageButtonHolder("расход " + expenseName + " " + expenseAmount + " внесен", null);
     }
 }

@@ -2,12 +2,12 @@ package kls.tgb.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kls.tgb.dto.ExpenseDto;
-import kls.tgb.dto.UserDto;
-import kls.tgb.exception.StateMachineException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SerializeUtil {
 
     private static ObjectMapper mapper = new ObjectMapper();
@@ -20,10 +20,10 @@ public class SerializeUtil {
         }
     }
 
-    public static <K> byte[] convertObjectToByteArray(Long userTgId, K userDto) {
+    public static <K> byte[] convertObjectToByteArray(K dto) {
         byte[] bytes;
         try {
-            bytes = mapper.writeValueAsBytes(userDto);
+            bytes = mapper.writeValueAsBytes(dto);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e); //TODO
         }

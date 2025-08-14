@@ -29,5 +29,5 @@ public interface DbService {
 
     void updateExpenseDescription(@NonNull final Long expenseId, @NonNull final String description);
 
-    void updateExpenseAmount(Long expenseId, Long amount);
+    String updateExpenseAmount(Long expenseId, Long amount);
 }

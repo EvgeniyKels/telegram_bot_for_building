@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/tgb_bot
     username: postgres
-    password: localhost
+    password: ${BD_PASS}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -14,7 +14,7 @@ spring:
     change-log: classpath:db.changelog/changelog-root.yml
     default-schema: public
     user: postgres
-    password: localhost
+    password: ${BD_PASS}
     url: jdbc:postgresql://localhost:5432/tgb_bot
     drop-first: true
 

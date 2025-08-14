@@ -1,6 +1,5 @@
 package kls.tgb.exception;
 
-import kls.tgb.dto.sm.StartCommandState;
 import lombok.Getter;
 import lombok.NonNull;
 

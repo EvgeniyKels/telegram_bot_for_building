@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @AllArgsConstructor
 public class BotExceptionHandler {
 
-    private final String USER_MESSAGE = "Произошла ошибка. Попробуйте позже.";
+    private static final String USER_MESSAGE = "Произошла ошибка. Попробуйте позже.";
     private final MessageSender messageSender;
 
     @ExceptionHandler(CommandHandlerException.class)

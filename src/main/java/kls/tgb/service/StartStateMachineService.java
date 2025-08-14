@@ -84,7 +84,7 @@ class StartStateMachineService {
 
     private void updateStateInDbAndSetToDto(StartCommandState state, Long userTgId, UserDto userDto) {
         userDto.setState(state);
-        dbService.setState(userTgId, state.name(), convertObjectToByteArray(userTgId, userDto));
+        dbService.setState(userTgId, state.name(), convertObjectToByteArray(userDto));
     }
 
     MessageButtonHolder createNewBlankProject(StateDto stateByTgID, UserAction action) {
@@ -143,7 +143,7 @@ class StartStateMachineService {
         }
     }
 
-    MessageButtonHolder handleFinalStartStatus(@NonNull StateDto stateByTgID) throws IOException {
+    MessageButtonHolder handleFinalStartStatus(@NonNull StateDto stateByTgID) {
         StartCommandState oldState = StartCommandState.valueOf(stateByTgID.getState());
         UserDto userDto = convertByteArrayToObject(stateByTgID.getData(), UserDto.class);
         updateStateInDbAndSetToDto(START_COMMAND_FINISHED, userDto.getTelegramId(), userDto);

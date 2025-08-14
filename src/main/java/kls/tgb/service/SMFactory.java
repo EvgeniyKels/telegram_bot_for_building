@@ -3,7 +3,6 @@ package kls.tgb.service;
 import kls.tgb.dto.StateDto;
 import kls.tgb.dto.sm.AddExpenseState;
 import kls.tgb.dto.sm.StartCommandState;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

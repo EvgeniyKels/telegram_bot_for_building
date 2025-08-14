@@ -136,9 +136,10 @@ public class DbServiceImpl implements DbService {
     }
 
     @Override
-    public void updateExpenseAmount(Long expenseId, Long amount) {
+    public String updateExpenseAmount(Long expenseId, Long amount) {
         ExpenseEntity expenseEntity = expenseRepo.findById(expenseId).orElseThrow();
         expenseEntity.setAmount(BigDecimal.valueOf(amount));
+        return expenseEntity.getDescription();
     }
 
     @Override
@@ -165,7 +166,7 @@ public class DbServiceImpl implements DbService {
             stateDto.setState(StartCommandState.STATE_NOT_EXISTS.name());
             UserDto userDto = new UserDto();
             userDto.setTelegramId(telegramId);
-            stateDto.setData(convertObjectToByteArray(telegramId, userDto));
+            stateDto.setData(convertObjectToByteArray(userDto));
             return stateDto;
         });
     }

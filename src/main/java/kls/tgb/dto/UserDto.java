@@ -24,4 +24,4 @@ public class UserDto {
     private Long chatId;
     private Long activeProjectId;
 }
-//TODO лишние поля
+//TODO возможно лишние поля
