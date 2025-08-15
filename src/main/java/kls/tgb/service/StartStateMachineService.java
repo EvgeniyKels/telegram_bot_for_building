@@ -35,7 +35,6 @@ import static kls.tgb.util.StringConstants.LETS_SEE_PROJECTS;
 class StartStateMachineService {
 
     private final DbService dbService;
-    private final ObjectMapper objectMapper;
 
     MessageButtonHolder showProjectsOrCreateNew(StateDto stateByTgID, UserAction action) {
         StartCommandState oldState = StartCommandState.valueOf(stateByTgID.getState());

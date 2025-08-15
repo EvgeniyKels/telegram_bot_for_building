@@ -136,10 +136,17 @@ public class DbServiceImpl implements DbService {
     }
 
     @Override
+    @Transactional
     public String updateExpenseAmount(Long expenseId, Long amount) {
         ExpenseEntity expenseEntity = expenseRepo.findById(expenseId).orElseThrow();
         expenseEntity.setAmount(BigDecimal.valueOf(amount));
         return expenseEntity.getDescription();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ExpenseDto> getAllExpenses(Long userTgId) {
+        return List.of();
     }
 
     @Override

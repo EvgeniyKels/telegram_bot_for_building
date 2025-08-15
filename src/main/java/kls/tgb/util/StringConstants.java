@@ -31,6 +31,7 @@ public final class StringConstants {
     public static final String START = "start";
     public static final String REMOVE = "remove";
     public static final String ADD_EXPENSE = "add_expense";
+    public static final String ALL_EXPENSES = "all_expenses";
 
     // сообщения клиенту
     public static final String YOU_HAVE_NOT_PROJECTS = "У вас нет проектов. Хотите создать новый ?";
@@ -50,10 +51,12 @@ public final class StringConstants {
     public static final String CHANGE_NAME_RESTRICTION = "пользователь не может менять имя после регистрации";
 
     // имена бинов
-    public static final String EXPENSE_COMMAND_SM = "E_SM";
-    public static final String START_COMMAND_SM = "S_SM";
-    public static final String EXPENSE_COMMAND_SERVICE = "ECS";
-    public static final String START_COMMAND_SERVICE = "SCS";
+    public static final String EXPENSE_COMMAND_SM = "expense_command_sm";
+    public static final String START_COMMAND_SM = "start_command_sm";
+    public static final String EXPENSE_COMMAND_SERVICE = "expense_command_service";
+    public static final String START_COMMAND_SERVICE = "start_command_service";
+    public static final String ALL_EXPENSES_COMMAND_SM = "all_expenses_command_sm";
+    public static final String ALL_EXPENSES_COMMAND_SERVICE = "all_expenses_command_sm";
 
 
 }

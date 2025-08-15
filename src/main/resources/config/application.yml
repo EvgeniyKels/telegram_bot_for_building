@@ -27,6 +27,7 @@ telegram:
       start: приветствие, создание / изменение пользователя
       remove: обнуляет состояние проектов
       add_expense: добавляет расход
+      all_expenses: все расходы
 
 logging:
   level:

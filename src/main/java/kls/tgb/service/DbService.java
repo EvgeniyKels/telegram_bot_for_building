@@ -30,4 +30,6 @@ public interface DbService {
     void updateExpenseDescription(@NonNull final Long expenseId, @NonNull final String description);
 
     String updateExpenseAmount(Long expenseId, Long amount);
+
+    List<ExpenseDto> getAllExpenses(Long userTgId);
 }

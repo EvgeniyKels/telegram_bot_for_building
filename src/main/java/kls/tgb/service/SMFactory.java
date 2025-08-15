@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-import static kls.tgb.util.StringConstants.EXPENSE_COMMAND_SM;
-import static kls.tgb.util.StringConstants.START_COMMAND_SM;
+import static kls.tgb.util.StringConstants.*;
 
 @Component
 public class SMFactory {

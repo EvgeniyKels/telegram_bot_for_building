@@ -1,6 +1,7 @@
 package kls.tgb.config;
 
 import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandAddExpenseHandler;
+import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandAllExpensesHandler;
 import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandHandler;
 //import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandReloadHandlerImpl;
 import kls.tgb.telegram.userinputhandlers.commandhandlers.CommandStartHandlerImpl;
@@ -25,11 +26,13 @@ public class BotCommandConfig {
     @Bean
     public Map<String, CommandHandler> commandHandlerMap(
             CommandStartHandlerImpl commandStartHandler,
-            /*CommandReloadHandlerImpl commandReloadHandler,*/ CommandAddExpenseHandler commandAddExpenseHandler) {
+            /*CommandReloadHandlerImpl commandReloadHandler,*/ CommandAddExpenseHandler commandAddExpenseHandler,
+            CommandAllExpensesHandler commandAllExpensesHandler) {
         final var pairs = List.of(
                 Pair.of(commandStartHandler.getHandlerName(), commandStartHandler.getHandlerDescription()),
 //                Pair.of(commandReloadHandler.getHandlerName(), commandReloadHandler.getHandlerDescription()),
-                Pair.of(commandAddExpenseHandler.getHandlerName(), commandAddExpenseHandler.getHandlerDescription())
+                Pair.of(commandAddExpenseHandler.getHandlerName(), commandAddExpenseHandler.getHandlerDescription()),
+                Pair.of(commandAllExpensesHandler.getHandlerName(), commandAllExpensesHandler.getHandlerDescription())
                 );
         botCommands(pairs);
         return new ConcurrentHashMap<>(Map.of(
